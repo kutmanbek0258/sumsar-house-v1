@@ -1,3 +1,5 @@
+'use strict'
+
 const { faqService: {
     addFAQ,
     getFAQ,

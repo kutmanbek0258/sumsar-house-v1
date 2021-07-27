@@ -1,9 +1,13 @@
+'use strict'
+
 const auth = require('basic-auth');
 const shortid = require('shortid');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const { validator: {
     isPasswordValid
+}, checkToken: {
+    checkToken
 } } = require("./../helpers");
 const { userService: {
     loginUser,
@@ -179,28 +183,5 @@ exports.changePasswordAfter = async function (req, res){
     } else {
 
         res.status(401).json({ message: 'Invalid Token !' });
-    }
-}
-
-function checkToken(req) {
-
-    const token = req.headers['x-access-token'];
-
-    if (token) {
-
-        try {
-
-            var decoded = jwt.verify(token, config.secret);
-
-            return decoded.message === req.params.id;
-
-        } catch(err) {
-
-            return false;
-        }
-
-    } else {
-
-        return false;
     }
 }

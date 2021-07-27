@@ -1,3 +1,5 @@
+'use strict'
+
 const { checkToken: {
     checkToken
 } } = require("./../helpers")

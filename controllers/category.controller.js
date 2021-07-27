@@ -1,3 +1,5 @@
+'use strict'
+
 const {categoryService: {
     addCategory,
     removeCategory,

@@ -1,3 +1,5 @@
+'use strict'
+
 const bannerService = require("./banner.service")
 const categoryService = require("./category.service")
 const faqService = require("./faq.service")
