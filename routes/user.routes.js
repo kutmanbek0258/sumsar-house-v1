@@ -1,6 +1,7 @@
 'use strict'
 const express = require("express");
 const router = express.Router();
+const config = require("./../config/config");
 
 const { userController: {
     userAuthenticate,
@@ -26,6 +27,7 @@ module.exports = app => {
     router.put('/users/:id', changePassword)
 
     app.use(router)
+    app.use(config.api_v1, router)
 
 }
 

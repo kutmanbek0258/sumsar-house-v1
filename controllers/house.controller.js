@@ -1,38 +1,31 @@
 const config = require("./../config/config.json")
 
-const {
-    houseService: {
-        addHouse,
-        editHouse,
-        getHouse,
-        getHouses,
-        isHouseUser,
-        getHousesCategory,
-        getHousesKeyword,
-        removeHouse,
-        getHousesRadius,
-        getHousesUser
-    },
-    favoriteService: {
-        isFavorite,
-        clearFavorite
-    },
-    historyService: {
-        isHistory,
-        addHistory,
-        clearHistory
-    }
-} = require("./../services")
+const {houseService: {
+    addHouse,
+    editHouse,
+    getHouse,
+    getHouses,
+    isHouseUser,
+    getHousesCategory,
+    getHousesKeyword,
+    removeHouse,
+    getHousesRadius,
+    getHousesUser
+}, favoriteService: {
+    isFavorite,
+    clearFavorite
+}, historyService: {
+    isHistory,
+    addHistory,
+    clearHistory
+}} = require("./../services")
 
-const {
-    checkToken: {
-        checkToken
-    },
-    files: {
-        saveBase64Image,
-        deleteFile
-    }
-} = require("./../helpers")
+const {checkToken: {
+    checkToken
+}, files: {
+    saveBase64Image,
+    deleteFile
+}} = require("./../helpers")
 
 exports.addHouse = async function (req, res) {
 
@@ -53,16 +46,13 @@ exports.addHouse = async function (req, res) {
 
         } else{
 
-            await addHouse(address, description, location, phone, price, user, category)
+            await addHouse(address, description, location, phone, price, user, category, result => {
+                saveBase64Image(image, config.img_houses + result.id + "_1.png");
 
-                .then(result => {
-
-                    saveBase64Image(image, config.img_houses + result.id + "_1.png");
-
-                    res.status(result.status).json({message: result.message})
-                })
-
-                .catch(err => res.status(err.status).json({ message: err.message }));
+                res.status(result.status).json({message: result.message})
+            }, err => {
+                res.status(err.status).json({ message: err.message })
+            })
 
         }
 
@@ -94,34 +84,29 @@ exports.editHouse = async function (req, res){
 
         } else{
 
-            await isHouseUser(_id, user)
+            await isHouseUser(_id, user, result => {
+                if(result.house === true){
 
-                .then(result => {
+                    editHouse(_id, address, description, phone, price, location, category, result => {
+                        if(image){
 
-                    if(result.house === true){
+                            saveBase64Image(image, config.img_houses + _id + "_1.png");
 
-                        editHouse(_id, address, description, phone, price, location, category)
+                        }
 
-                            .then(result => {
+                        res.status(result.status).json({message: result.message});
+                    }, err => {
+                        res.status(err.status).json({message: err.message})
+                    })
 
-                                if(image){
+                }else{
 
-                                    saveBase64Image(image, config.img_houses + _id + "_1.png");
+                    res.status(400).json({message: 'Invalid reguest !'})
 
-                                }
-
-                                res.status(result.status).json({message: result.message});
-
-                            })
-
-                            .catch(err => res.status(err.status).json({message: err.message}));
-
-                    }else{
-
-                        res.status(400).json({message: 'Invalid reguest !'})
-
-                    }
-                })
+                }
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -140,35 +125,29 @@ exports.getHouse = async function (req, res) {
         const _id = req.body._id;
         const user = req.body.user._id;
 
-        await getHouse(_id)
+        await getHouse(_id, resultHouse => {
+            let house = resultHouse.house.toObject();
 
-            .then(resultHouse => {
+            isFavorite(user, _id, result => {
+                house.favorite = result.favorite;
 
-                var house = resultHouse.house.toObject();
+                res.status(resultHouse.status).json(house);
 
-                isFavorite(user, _id)
+                isHistory(user, _id, result => {
+                    if(result.history === false){
 
-                    .then(result => {
+                        addHistory(user, _id);
 
-                        house.favorite = result.favorite;
-
-                        res.status(resultHouse.status).json(house);
-
-                        isHistory(user, _id)
-
-                            .then(result => {
-
-                                if(result.history === false){
-
-                                    addHistory(user, _id);
-
-                                }
-
-                            })
-
-                    })
-
+                    }
+                }, err => {
+                    res.status(err.status).json({message: err.message})
+                })
+            }, err => {
+                res.status(err.status).json({message: err.message})
             })
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }else{
 
@@ -182,8 +161,6 @@ exports.getHouses = async function (req, res) {
 
     if(await checkToken(req)){
 
-
-
         const count = req.body.count;
         const limit = req.body.limit;
         const location = req.body.location;
@@ -196,7 +173,7 @@ exports.getHouses = async function (req, res) {
 
         } else{
 
-            var sort;
+            let sort;
 
             if(sort_date){
                 sort = {created_at: -1}
@@ -204,11 +181,11 @@ exports.getHouses = async function (req, res) {
                 sort = null;
             }
 
-            await getHouses(sort, count, limit, location, radius)
-
-                .then(result => res.status(result.status).json({houses: result.houses}))
-
-                .catch(err => res.status(err.status).json({message: err.message}));
+            await getHouses(sort, count, limit, location, radius, result => {
+                res.status(result.status).json({houses: result.houses})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -232,11 +209,11 @@ exports.getHousesUser = async function (req, res) {
 
         } else{
 
-            await getHousesUser(user)
-
-                .then(result => {res.status(result.status).json({houses: result.houses})})
-
-                .catch(err => res.status(err.status).json({message: err.message}));
+            await getHousesUser(user, result => {
+                res.status(result.status).json({houses: result.houses})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -261,11 +238,11 @@ exports.getHousesRadius = async function (req, res) {
 
         } else{
 
-            await getHousesRadius(location, radius)
-
-                .then(result => res.status(result.status).json({houses: result.houses}))
-
-                .catch(err => res.status(err.status).json({message: err.message}));
+            await getHousesRadius(location, radius, result => {
+                res.status(result.status).json({houses: result.houses})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -302,11 +279,11 @@ exports.getHousesSearch = async function (req, res) {
                 sort = null;
             }
 
-            await getHousesKeyword(sort, keyword, count, limit, location, radius)
-
-                .then(result => res.status(result.status).json({houses: result.houses}))
-
-                .catch(err => res.status(err.status).json({message: err.message}));
+            await getHousesKeyword(sort, keyword, count, limit, location, radius, result => {
+                res.status(result.status).json({houses: result.houses})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -343,11 +320,11 @@ exports.getHousesCategory = async function (req, res) {
                 sort = null;
             }
 
-            await getHousesCategory(sort, category, count, limit, location, radius)
-
-                .then(result => res.status(result.status).json({houses: result.houses}))
-
-                .catch(err => res.status(err.status).json({message: err.message}));
+            await getHousesCategory(sort, category, count, limit, location, radius, result => {
+                res.status(result.status).json({houses: result.houses})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
         }
 
@@ -367,32 +344,28 @@ exports.removeHouse = async function (req, res) {
         const _id = req.body._id;
         const user = req.body.user._id;
 
-        await isHouseUser(_id, user)
+        await isHouseUser(_id, user, result => {
+            if(result.house === true){
 
-            .then(result => {
-                if(result.house === true){
+                removeHouse(_id, result => {
+                    deleteFile(config.img_houses + _id + "_1.png");
+                    res.status(result.status).json({message: result.message})
 
-                    removeHouse(_id)
+                    clearHistory(_id);
 
-                        .then(result => {
+                    clearFavorite(_id);
+                }, err => {
+                    res.status(result.status).json({message: result.message})
+                })
 
-                            deleteFile(config.img_houses + _id + "_1.png");
-                            res.status(result.status).json({message: result.message})
+            }else{
 
-                            clearHistory(_id);
+                res.status(400).json({message: 'Invalid request !'})
 
-                            clearFavorite(_id);
-
-                        })
-
-                        .catch(err => res.status(result.status).json({message: result.message}))
-
-                }else{
-
-                    res.status(400).json({message: 'Invalid request !'})
-
-                }
-            })
+            }
+        }, err => {
+            res.status(400).json({message: 'Internal error !'})
+        })
 
 
 

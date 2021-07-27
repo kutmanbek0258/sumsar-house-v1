@@ -3,7 +3,7 @@
 const history = require('../models/history');
 const config = require('../config/config.json');
 
-exports.addHistory = async function(user, house, callback){
+exports.addHistory = async function(user, house, callback, error){
     const newHistory = new history({
 
         user: user,
@@ -16,26 +16,26 @@ exports.addHistory = async function(user, house, callback){
 
         .then(() => callback({ status: 200, message: 'Added to hostory' }))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }));
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
 }
 
-exports.clearHistory = async function(user, callback){
+exports.clearHistory = async function(user, callback, error){
     await history.deleteMany({ user: user })
 
         .then(() => callback({ status: 200,  message: 'Success cleared !' }))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }
 
-exports.clearHistoryHouse = async function(house, callback){
+exports.clearHistoryHouse = async function(house, callback, error){
     await history.deleteMany({ house: house })
 
         .then(() => callback({ status: 200,  message: 'Success cleared !' }))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }
 
-exports.isHistory = async function(user, house, callback){
+exports.isHistory = async function(user, house, callback, error){
     await history.find({user: user, house: house})
 
         .then(history => {
@@ -47,10 +47,10 @@ exports.isHistory = async function(user, house, callback){
             callback({status: 200})
         })
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }
 
-exports.getHistories = async function(user, callback){
+exports.getHistories = async function(user, callback, error){
     await history.find({ user: user })
 
         .populate('user')
@@ -73,13 +73,13 @@ exports.getHistories = async function(user, callback){
 
         .then(histories => callback({ status: 200, histories: histories}))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }
 
-exports.removeHistory = async function(user, house, callback){
+exports.removeHistory = async function(user, house, callback, error){
     await history.deleteOne({ user: user, house: house })
 
         .then(history => callback({ status: 200,  message: 'Success deleted !' }))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }

@@ -8,5 +8,6 @@
    "banner_radius" : 20000,
    "history_limit" : 100,
    "favorite_limit" : 100,
-   "default_pass" : "defpass123"
+   "default_pass" : "defpass123",
+   "api_v1": "/api/v1"
 }

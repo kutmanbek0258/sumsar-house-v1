@@ -17,38 +17,33 @@ exports.addFavorite = async function (req, res){
         const user = req.body.user._id;
         const house = req.body.house._id;
 
-        await isFavorite(user, house)
+        await isFavorite(user, house, result => {
+            if(result.favorite === false){
 
-            .then(result => {
+                addFavorite(user, house, result => {
+                    res.status(result.status).json({message: result.message})
+                }, err => {
+                    res.status(err.status).json({message: err.message})
+                })
 
-                if(result.favorite === false){
+            }else{
 
-                    addFavorite(user, house)
+                removeFavorite(user, house, result => {
+                    res.status(result.status).json({message: result.message})
+                }, err => {
+                    res.status(err.status).json({message: err.message})
+                })
 
-                        .then(result => res.status(result.status).json({message: result.message}))
-
-                        .catch(err => res.status(err.status).json({message: err.message}));
-
-                }else{
-
-                    removeFavorite(user, house)
-
-                        .then(result => res.status(result.status).json({message: result.message}))
-
-                        .catch(err => res.status(err.status).json({message: err.message}));
-                }
-
-            })
-
-            .catch()
+            }
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }else{
 
         res.status(400).json({message: 'Invalid reguest !'})
 
     }
-
-
 
 }
 
@@ -58,11 +53,11 @@ exports.getFavorites = async function (req, res) {
 
         const user = req.body._id;
 
-        await getFavorites(user)
-
-            .then(result => res.status(result.status).json({favorites: result.favorites}))
-
-            .catch(err => res.status(err.status).json({message: err.message}));
+        await getFavorites(user, result => {
+            res.status(result.status).json({favorites: result.favorites})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }else{
 
@@ -78,11 +73,11 @@ exports.clearFavorite = async function (req, res) {
 
         const user = req.body.user._id;
 
-        await clearFavorite(user)
-
-            .then(result => res.status(result.status).json({message: result.message}))
-
-            .catch(err => res.status(err.status).json({message: err.message}));
+        await clearFavorite(user, result => {
+            res.status(result.status).json({message: result.message})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }else{
 

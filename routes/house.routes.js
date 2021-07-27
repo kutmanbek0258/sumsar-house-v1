@@ -1,6 +1,7 @@
 'use strict'
 const express = require("express");
 const router = express.Router();
+const config = require("./../config/config");
 
 const { houseController: {
     addHouse,
@@ -34,4 +35,5 @@ module.exports = app => {
     router.post('/house_remove/:id', removeHouse)
 
     app.use(router)
+    app.use(config.api_v1, router)
 }

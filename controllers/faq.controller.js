@@ -10,30 +10,30 @@ exports.addFAQ = async function (req, res) {
     const contacts = req.body.contacts;
     const link = req.body.link;
 
-    await addFAQ(title, content, contacts, link)
-
-        .then(result => res.status(result.status).json({ message: result.message }))
-
-        .catch(err => res.status(err.status).json({ message: err.message }))
+    await addFAQ(title, content, contacts, link, result => {
+        res.status(result.status).json({ message: result.message })
+    }, err => {
+        res.status(err.status).json({ message: err.message })
+    })
 
 }
 
 exports.getFAQ = async function (req, res) {
 
-    await getFAQ()
-
-        .then(result => res.status(result.status).json(result.faq))
-
-        .catch(err => res.status(err.status).json({message: err.message}));
+    await getFAQ(result => {
+        res.status(result.status).json(result.faq)
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 
 }
 
 exports.removeFAQ = async function (req, res) {
     const { _id } = req.body;
 
-    await removeFAQ(_id)
-
-        .then(result => res.status(result.status).json({message: "removed success"}))
-
-        .catch(err => res.status(err.status).json({message: err.message}))
+    await removeFAQ(_id, result => {
+        res.status(result.status).json({message: "removed success"})
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 }

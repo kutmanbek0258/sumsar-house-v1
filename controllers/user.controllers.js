@@ -1,17 +1,16 @@
 const auth = require('basic-auth');
 const shortid = require('shortid');
 const jwt = require('jsonwebtoken');
-const passwordValidator = require('password-validator');
 const config = require('../config/config.json');
-const {
-        userService:
-            {
-                loginUser,
-                changePassword,
-                getProfile,
-                registerUser
-            }
-    } = require("./../services")
+const { validator: {
+    isPasswordValid
+} } = require("./../helpers");
+const { userService: {
+    loginUser,
+    changePassword,
+    getProfile,
+    registerUser
+}} = require("./../services")
 
 exports.userAuthenticate = async function(req, res){
 
@@ -23,7 +22,7 @@ exports.userAuthenticate = async function(req, res){
 
     } else {
 
-        await loginUser(credentials.name, credentials.pass, function (result){
+        await loginUser(credentials.name, credentials.pass, result =>{
             if(result.status === 200){
                 const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
@@ -31,6 +30,8 @@ exports.userAuthenticate = async function(req, res){
             }else {
                 res.status(result.status).json({ message: result.message })
             }
+        }, err => {
+            res.status(400).json({message: "Internal server error"})
         })
     }
 }
@@ -38,7 +39,7 @@ exports.userAuthenticate = async function(req, res){
 exports.userRegister = async function(req, res){
 
     const name = req.body.name;
-    var email = req.body.email;
+    let email = req.body.email;
     const phone = req.body.phone;
     const password = req.body.password;
 
@@ -55,7 +56,7 @@ exports.userRegister = async function(req, res){
         }
 
         if(isPasswordValid(password)){
-            await registerUser(name, email, phone, password, function (result){
+            await registerUser(name, email, phone, password, result => {
                 if(result.status === 200){
                     const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
@@ -63,6 +64,8 @@ exports.userRegister = async function(req, res){
                 }else {
                     res.status(result.status).json({ message: result.message })
                 }
+            }, err => {
+                res.status(err.status).json({message: err.message})
             })
         }else{
             res.status(400).json({ message: "invalid_pass" })
@@ -86,16 +89,13 @@ exports.userRegisterFast = async function(req, res){
         const password = config.default_pass;
 
         if(isPasswordValid(password)){
-            await registerUser(name, email, phone, password)
+            await registerUser(name, email, phone, password, result => {
+                const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
-                .then(result => {
-
-                    const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
-
-                    res.status(result.status).json({ message: result.message, token: token });
-                })
-
-                .catch(err => res.status(err.status).json({ message: err.message }));
+                res.status(result.status).json({ message: result.message, token: token });
+            }, err => {
+                res.status(err.status).json({ message: err.message })
+            })
         }else{
             res.status(400).json({ message: "invalid_pass" })
         }
@@ -118,15 +118,13 @@ exports.changePassword = async function (req, res){
         } else {
 
             if(isPasswordValid(newPassword)){
-                await changePassword(_id, phone, newPassword)
+                await changePassword(_id, phone, newPassword, result => {
+                    const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
-                    .then(result => {
-                        const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
-
-                        res.status(result.status).json({ message: result.message, token: token })
-                    })
-
-                    .catch(err => res.status(err.status).json({ message: err.message }));
+                    res.status(result.status).json({ message: result.message, token: token })
+                }, err => {
+                    res.status(err.status).json({ message: err.message })
+                })
             }else{
                 res.status(400).json({ message: "invalid_pass" })
             }
@@ -142,11 +140,11 @@ exports.getProfile = async function (req, res){
 
     if (checkToken(req)) {
 
-        await getProfile(req.params.id)
-
-            .then(result => res.json(result))
-
-            .catch(err => res.status(err.status).json({ message: err.message }));
+        await getProfile(req.params.id, result => {
+            res.status(result.status).json(result)
+        }, err => {
+            res.status(err.status).json({ message: err.message })
+        })
 
     } else {
 
@@ -168,11 +166,11 @@ exports.changePasswordAfter = async function (req, res){
         } else {
 
             if(isPasswordValid(newPassword)){
-                await changePassword(req.params.id, oldPassword, newPassword)
-
-                    .then(result => res.status(result.status).json({ message: result.message }))
-
-                    .catch(err => res.status(err.status).json({ message: err.message }));
+                await changePassword(req.params.id, oldPassword, newPassword, result => {
+                    res.status(result.status).json({ message: result.message })
+                }, err => {
+                    res.status(err.status).json({ message: err.message })
+                })
             }else{
                 res.status(400).json({ message: "invalid_pass" })
             }
@@ -182,21 +180,6 @@ exports.changePasswordAfter = async function (req, res){
 
         res.status(401).json({ message: 'Invalid Token !' });
     }
-}
-
-function isPasswordValid(password) {
-
-    var schema = new passwordValidator();
-
-    schema
-        .is().min(8)                                    // Minimum length 8
-        .is().max(100)                                  // Maximum length 100
-        .has().lowercase()                              // Must have lowercase letters
-        .has().digits()                                 // Must have digits
-        .has().not().spaces()                           // Should not have spaces
-        .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
-
-    return schema.validate(password);
 }
 
 function checkToken(req) {

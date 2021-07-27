@@ -4,7 +4,7 @@ const user = require('../models/user');
 const bcrypt = require('bcryptjs');
 const config = require('../config/config.json');
 
-exports.loginUser = async function(phone, password, callback){
+exports.loginUser = async function(phone, password, callback, error){
     await user.find({phone: phone})
 
         .then(users => {
@@ -34,10 +34,10 @@ exports.loginUser = async function(phone, password, callback){
             }
         })
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }));
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
 }
 
-exports.changePassword = async function(phone, password, newPassword, callback){
+exports.changePassword = async function(phone, password, newPassword, callback, error){
     await user.find({ phone: phone })
 
         .then(users => {
@@ -61,18 +61,18 @@ exports.changePassword = async function(phone, password, newPassword, callback){
 
         .then(user => callback({ status: 200, message: 'Password Updated Successfully !' }))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }));
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
 }
 
-exports.getProfile = async function(phone, callback){
+exports.getProfile = async function(phone, callback, error){
     await user.find({ phone: phone }, { name: 1, phone: 1, created_at: 1, _id: 1, fast: 1 })
 
         .then(users => callback({ status: 200, users: users[0]}))
 
-        .catch(err => callback({ status: 500, message: 'Internal Server Error !' }))
+        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
 }
 
-exports.registerUser = async function(name, email, phone, password, callback){
+exports.registerUser = async function(name, email, phone, password, callback, error){
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
@@ -96,16 +96,16 @@ exports.registerUser = async function(name, email, phone, password, callback){
 
                 console.log(err);
 
-                callback({ status: 409, message: 'User Already Registered !' });
+                error({ status: 409, message: 'User Already Registered !' });
 
             } else {
 
-                callback({ status: 500, message: 'Internal Server Error !' });
+                error({ status: 500, message: 'Internal Server Error !' });
             }
         });
 }
 
-exports.changePassword = async function(_id, phone, newPassword, callback){
+exports.changePassword = async function(_id, phone, newPassword, callback, error){
     await user.find({ _id: _id })
 
         .then(users => {
@@ -135,5 +135,5 @@ exports.changePassword = async function(_id, phone, newPassword, callback){
 
         .then(user => callback({ status: 200, message: phone }))
 
-        .catch(err => callback({ status: 500, message: 'User existed !' }));
+        .catch(err => error({ status: 500, message: 'User existed !' }));
 }

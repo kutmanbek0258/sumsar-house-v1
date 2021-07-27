@@ -6,7 +6,7 @@ const faqRoutes = require("./faq.routes")
 const favoriteRoutes = require("./favorite.routes")
 const historyRoutes = require("./history.routes")
 const houseRoutes = require("./house.routes")
-const userRoutes = require("./house.routes")
+const userRoutes = require("./user.routes")
 
 let routes = app => {
     bannerRoutes(app)

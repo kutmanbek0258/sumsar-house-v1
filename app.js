@@ -2,6 +2,7 @@
 
 const express    = require('express');
 const app        = express();
+const router     = express.Router();
 const bodyParser = require('body-parser');
 const logger 	   = require('morgan');
 const mongoose = require('mongoose');
@@ -26,7 +27,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(logger('dev'));
 
-userRoutes(app)
+routes(app)
 
 app.set('view engine', 'pug');
 app.set("views", "views");

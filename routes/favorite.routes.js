@@ -1,6 +1,7 @@
 'use strict'
 const express = require("express");
 const router = express.Router();
+const config = require("./../config/config");
 
 const { favoriteController: {
     addFavorite,
@@ -17,5 +18,6 @@ module.exports = app => {
     router.post('/favorite_clear/:id', clearFavorite)
 
     app.use(router)
+    app.use(config.api_v1, router)
 
 }
