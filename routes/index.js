@@ -7,6 +7,7 @@ const favoriteRoutes = require("./favorite.routes")
 const historyRoutes = require("./history.routes")
 const houseRoutes = require("./house.routes")
 const userRoutes = require("./user.routes")
+const viewRoutes = require("./view.routes")
 
 let routes = app => {
     bannerRoutes(app)
@@ -16,6 +17,7 @@ let routes = app => {
     historyRoutes(app)
     houseRoutes(app)
     userRoutes(app)
+    viewRoutes(app)
 }
 
 module.exports = routes

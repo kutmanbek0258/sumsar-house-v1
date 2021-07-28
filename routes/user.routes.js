@@ -27,7 +27,6 @@ module.exports = app => {
 
     router.put('/users/:id', changePassword)
 
-    app.use(router)
     app.use(config.api_v1, router)
 
 }

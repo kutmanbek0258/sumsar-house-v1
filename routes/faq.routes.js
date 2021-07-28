@@ -16,7 +16,6 @@ module.exports = app => {
 
     router.post('/remove_faq/:id', removeFAQ)
 
-    app.use(router)
     app.use(config.api_v1, router)
 
 }

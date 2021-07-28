@@ -16,7 +16,6 @@ module.exports = app => {
 
     router.post('/category_remove', removeCategory);
 
-    app.use(router)
     app.use(config.api_v1, router)
 
 }

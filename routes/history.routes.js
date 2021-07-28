@@ -20,7 +20,6 @@ module.exports = app => {
 
     router.post('/history_remove/:id', historyRemove);
 
-    app.use(router)
     app.use(config.api_v1, router)
 
 }

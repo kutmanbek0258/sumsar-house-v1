@@ -17,7 +17,6 @@ module.exports = app => {
 
     router.post('/banner_list', getBanners)
 
-    app.use(router)
     app.use(config.api_v1, router)
 
 }
