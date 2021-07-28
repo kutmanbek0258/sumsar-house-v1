@@ -1,7 +1,7 @@
 'use strict'
 
-const { checkToken: {
-    checkToken
+const { tokenHelper: {
+    verifyToken
 } } = require("./../helpers")
 const { favoriteService: {
     addFavorite,
@@ -14,7 +14,7 @@ const { favoriteService: {
 
 exports.addFavorite = async function (req, res){
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body.user._id;
         const house = req.body.house._id;
@@ -51,7 +51,7 @@ exports.addFavorite = async function (req, res){
 
 exports.getFavorites = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body._id;
 
@@ -71,7 +71,7 @@ exports.getFavorites = async function (req, res) {
 
 exports.clearFavorite = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body.user._id;
 

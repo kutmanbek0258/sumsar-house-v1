@@ -10,12 +10,12 @@ const { categoryController: {
 } } = require("./../controllers")
 
 module.exports = app => {
-    router.post('/category_add', addCategory);
+    router.post('/add', addCategory);
 
-    router.post('/category_list', getCategories);
+    router.post('/list', getCategories);
 
-    router.post('/category_remove', removeCategory);
+    router.post('/remove', removeCategory);
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/category", router)
 
 }

@@ -1,9 +1,9 @@
-const checkToken = require("./checktoken")
+const checkToken = require("./jwt.helper")
 const validator = require("./validator")
-const files = require("./files")
+const files = require("./files.helper")
 
 module.exports = {
-    checkToken,
+    tokenHelper: checkToken,
     validator,
     files
 }

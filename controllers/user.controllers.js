@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const { validator: {
     isPasswordValid
-}, checkToken: {
-    checkToken
+}, tokenHelper: {
+    verifyToken
 } } = require("./../helpers");
 const { userService: {
     loginUser,
@@ -28,7 +28,7 @@ exports.userAuthenticate = async function(req, res){
 
         await loginUser(credentials.name, credentials.pass, result =>{
             if(result.status === 200){
-                const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
+                const token = jwt.sign(result.user, config.secret, { expiresIn: "365d" });
 
                 res.status(result.status).json({ message: result.message, token: token });
             }else {
@@ -59,7 +59,7 @@ exports.userRegister = async function(req, res){
             email = phone;
         }
 
-        if(isPasswordValid(password)){
+        if(await isPasswordValid(password)){
             await registerUser(name, email, phone, password, result => {
                 if(result.status === 200){
                     const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
@@ -78,7 +78,7 @@ exports.userRegister = async function(req, res){
     }
 }
 
-exports.userRegisterFast = async function(req, res){
+exports.userRegister_V2 = async function(req, res){
 
     const name = req.body.name;
 
@@ -92,7 +92,7 @@ exports.userRegisterFast = async function(req, res){
         const email = phone;
         const password = config.default_pass;
 
-        if(isPasswordValid(password)){
+        if(await isPasswordValid(password)){
             await registerUser(name, email, phone, password, result => {
                 const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
@@ -109,7 +109,7 @@ exports.userRegisterFast = async function(req, res){
 
 exports.changePassword = async function (req, res){
 
-    if (checkToken(req)) {
+    if (await verifyToken(req)) {
 
         const _id = req.body._id;
         const phone = req.body.phone;
@@ -121,7 +121,7 @@ exports.changePassword = async function (req, res){
 
         } else {
 
-            if(isPasswordValid(newPassword)){
+            if(await isPasswordValid(newPassword)){
                 await changePassword(_id, phone, newPassword, result => {
                     const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
 
@@ -142,7 +142,7 @@ exports.changePassword = async function (req, res){
 
 exports.getProfile = async function (req, res){
 
-    if (checkToken(req)) {
+    if (await verifyToken(req)) {
 
         await getProfile(req.params.id, result => {
             res.status(result.status).json(result)
@@ -156,9 +156,9 @@ exports.getProfile = async function (req, res){
     }
 }
 
-exports.changePasswordAfter = async function (req, res){
+exports.changePassword_V2 = async function (req, res){
 
-    if (checkToken(req)) {
+    if (await verifyToken(req)) {
 
         const oldPassword = req.body.password;
         const newPassword = req.body.newPassword;
@@ -169,8 +169,8 @@ exports.changePasswordAfter = async function (req, res){
 
         } else {
 
-            if(isPasswordValid(newPassword)){
-                await changePassword(req.params.id, oldPassword, newPassword, result => {
+            if(await isPasswordValid(newPassword)){
+                await changePassword(req.body._id, oldPassword, newPassword, result => {
                     res.status(result.status).json({ message: result.message })
                 }, err => {
                     res.status(err.status).json({ message: err.message })

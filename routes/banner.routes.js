@@ -11,12 +11,12 @@ const { bannerController: {
 
 module.exports = app => {
 
-    router.post('/banner_add/:id', addBanner)
+    router.post('/add', addBanner)
 
-    router.post('/banner_remove/:id', removeBanner)
+    router.post('/remove', removeBanner)
 
-    router.post('/banner_list', getBanners)
+    router.post('/list', getBanners)
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/banner", router)
 
 }

@@ -9,7 +9,7 @@ exports.loginUser = async function(phone, password, callback, error){
 
         .then(users => {
 
-            if (users.length == 0) {
+            if (users.length === 0) {
 
                 callback({ status: 404, message: 'User Not Found !' });
 
@@ -26,7 +26,7 @@ exports.loginUser = async function(phone, password, callback, error){
 
             if (bcrypt.compareSync(password, hashed_password)) {
 
-                callback({ status: 200, message: phone });
+                callback({ status: 200, message: phone, user : { _id: user._id }});
 
             } else {
 

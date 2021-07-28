@@ -11,12 +11,12 @@ const { favoriteController: {
 
 module.exports = app => {
 
-    router.post('/favorite/:id', addFavorite)
+    router.post('/add', addFavorite)
 
-    router.post('/favorite_list/:id', getFavorites)
+    router.post('/list', getFavorites)
 
-    router.post('/favorite_clear/:id', clearFavorite)
+    router.post('/clear', clearFavorite)
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/favorite", router)
 
 }

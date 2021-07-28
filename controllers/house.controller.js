@@ -22,8 +22,8 @@ const {houseService: {
     clearHistory
 }} = require("./../services")
 
-const {checkToken: {
-    checkToken
+const {tokenHelper: {
+    verifyToken
 }, files: {
     saveBase64Image,
     deleteFile
@@ -31,7 +31,7 @@ const {checkToken: {
 
 exports.addHouse = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const address = req.body.address;
         const description = req.body.description;
@@ -68,7 +68,7 @@ exports.addHouse = async function (req, res) {
 
 exports.editHouse = async function (req, res){
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const _id = req.body._id;
         const address = req.body.address;
@@ -122,7 +122,7 @@ exports.editHouse = async function (req, res){
 
 exports.getHouse = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const _id = req.body._id;
         const user = req.body.user._id;
@@ -161,7 +161,7 @@ exports.getHouse = async function (req, res) {
 
 exports.getHouses = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const count = req.body.count;
         const limit = req.body.limit;
@@ -201,7 +201,7 @@ exports.getHouses = async function (req, res) {
 
 exports.getHousesUser = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body._id;
 
@@ -229,7 +229,7 @@ exports.getHousesUser = async function (req, res) {
 
 exports.getHousesRadius = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const location = req.body.location;
         const radius = req.body.radius;
@@ -258,7 +258,7 @@ exports.getHousesRadius = async function (req, res) {
 
 exports.getHousesSearch = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const count = req.body.count;
         const limit = req.body.limit;
@@ -299,7 +299,7 @@ exports.getHousesSearch = async function (req, res) {
 
 exports.getHousesCategory = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const count = req.body.count;
         const limit = req.body.limit;
@@ -341,7 +341,7 @@ exports.getHousesCategory = async function (req, res) {
 exports.removeHouse = async function (req, res) {
 
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const _id = req.body._id;
         const user = req.body.user._id;

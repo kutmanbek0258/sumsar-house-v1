@@ -16,23 +16,23 @@ const { houseController: {
 } } = require("./../controllers")
 
 module.exports = app => {
-    router.post('/house_add/:id', addHouse)
+    router.post('/add', addHouse)
 
-    router.post('/house_edit/:id', editHouse)
+    router.post('/edit', editHouse)
 
-    router.post('/house_get/:id', getHouse)
+    router.post('/get', getHouse)
 
-    router.post('/house_list/:id', getHouses)
+    router.post('/list', getHouses)
 
-    router.post('/house_list_user/:id', getHousesUser)
+    router.post('/list_user', getHousesUser)
 
-    router.post('/house_list_radius/:id', getHousesRadius)
+    router.post('/list_radius', getHousesRadius)
 
-    router.post('/house_list_search/:id', getHousesSearch)
+    router.post('/list_keyword', getHousesSearch)
 
-    router.post('/house_list_category/:id', getHousesCategory)
+    router.post('/list_category', getHousesCategory)
 
-    router.post('/house_remove/:id', removeHouse)
+    router.post('/remove', removeHouse)
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/house", router)
 }

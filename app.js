@@ -2,13 +2,11 @@
 
 const express    = require('express');
 const app        = express();
-const router     = express.Router();
 const bodyParser = require('body-parser');
 const logger 	   = require('morgan');
 const mongoose = require('mongoose');
 const port 	   = process.env.PORT || 8088;
 const routes   = require("./routes");
-const userRoutes = require("./routes/user.routes")
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/u_rent', {

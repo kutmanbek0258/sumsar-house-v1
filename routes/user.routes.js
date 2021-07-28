@@ -4,30 +4,34 @@ const express = require("express");
 const router = express.Router();
 const config = require("./../config/config");
 
+const { tokenHelper: {
+    checkToken
+} } = require("./../helpers")
+
 const { userController: {
     userAuthenticate,
     getProfile,
     changePassword,
-    changePasswordAfter,
+    changePassword_V2,
     userRegister,
-    userRegisterFast
+    userRegister_V2
 } } = require("./../controllers")
 
 module.exports = app => {
 
     router.post('/authenticate', userAuthenticate)
 
-    router.post('/users', userRegister)
+    router.post('/register', userRegister)
 
-    router.post('/users_fast', userRegisterFast)
+    router.post('/register_v2', userRegister_V2)
 
-    router.post('/users_after/:id', changePasswordAfter)
+    router.post('/password_v2', changePassword_V2)
 
-    router.get('/users/:id', getProfile)
+    router.get('/user/:id', checkToken, getProfile)
 
-    router.put('/users/:id', changePassword)
+    router.put('/password', changePassword)
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/users", router)
 
 }
 

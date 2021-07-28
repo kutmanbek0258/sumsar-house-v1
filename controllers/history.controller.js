@@ -1,7 +1,7 @@
 'use strict'
 
-const { checkToken: {
-    checkToken
+const { tokenHelper: {
+    verifyToken
 } } = require("./../helpers")
 const { historyService: {
     addHistory,
@@ -13,7 +13,7 @@ const { historyService: {
 
 exports.addHistory = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body.user._id;
         const house = req.body.house._id;
@@ -46,7 +46,7 @@ exports.addHistory = async function (req, res) {
 
 exports.historyList = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body._id;
 
@@ -66,7 +66,7 @@ exports.historyList = async function (req, res) {
 
 exports.historyClear = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body.user._id;
 
@@ -86,7 +86,7 @@ exports.historyClear = async function (req, res) {
 
 exports.historyRemove = async function (req, res) {
 
-    if(await checkToken(req)){
+    if(await verifyToken(req)){
 
         const user = req.body.user._id;
         const house = req.body.house._id;

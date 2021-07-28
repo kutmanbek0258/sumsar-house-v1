@@ -10,12 +10,12 @@ const { faqController: {
 }} = require("./../controllers")
 
 module.exports = app => {
-    router.post('/faq_add/:id', addFAQ)
+    router.post('/add', addFAQ)
 
     router.post('/faq', getFAQ)
 
-    router.post('/remove_faq/:id', removeFAQ)
+    router.post('/remove', removeFAQ)
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/faq", router)
 
 }

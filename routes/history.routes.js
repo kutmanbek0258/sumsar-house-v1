@@ -12,14 +12,14 @@ const { historyController: {
 
 module.exports = app => {
 
-    router.post('/history_add/:id', addHistory);
+    router.post('/add', addHistory);
 
-    router.post('/history_list/:id', historyList);
+    router.post('/list', historyList);
 
-    router.post('/history_clear/:id', historyClear);
+    router.post('/clear', historyClear);
 
-    router.post('/history_remove/:id', historyRemove);
+    router.post('/remove', historyRemove);
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1 + "/history", router)
 
 }
