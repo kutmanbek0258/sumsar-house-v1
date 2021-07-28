@@ -26,7 +26,7 @@ exports.loginUser = async function(phone, password, callback, error){
 
             if (bcrypt.compareSync(password, hashed_password)) {
 
-                callback({ status: 200, message: phone, user : { _id: user._id }});
+                callback({ status: 200, message: phone, user : { _id: user._id, phone: user.phone }});
 
             } else {
 

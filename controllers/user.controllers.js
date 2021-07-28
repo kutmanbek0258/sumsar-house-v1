@@ -6,9 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const { validator: {
     isPasswordValid
-}, tokenHelper: {
-    verifyToken
-} } = require("./../helpers");
+}} = require("./../helpers");
 const { userService: {
     loginUser,
     changePassword,
@@ -30,7 +28,7 @@ exports.userAuthenticate = async function(req, res){
             if(result.status === 200){
                 const token = jwt.sign(result.user, config.secret, { expiresIn: "365d" });
 
-                res.status(result.status).json({ message: result.message, token: token });
+                res.status(result.status).json({ user: result.user, token: token });
             }else {
                 res.status(result.status).json({ message: result.message })
             }
@@ -42,10 +40,15 @@ exports.userAuthenticate = async function(req, res){
 
 exports.userRegister = async function(req, res){
 
-    const name = req.body.name;
-    let email = req.body.email;
-    const phone = req.body.phone;
-    const password = req.body.password;
+    const {
+        name,
+        phone,
+        password
+    } = req.body
+
+    let {
+        email
+    } = req.body
 
     console.log(req.body);
 
@@ -80,7 +83,9 @@ exports.userRegister = async function(req, res){
 
 exports.userRegister_V2 = async function(req, res){
 
-    const name = req.body.name;
+    const {
+        name
+    } = req.body
 
     if (!name || !name.trim()) {
 
@@ -109,79 +114,64 @@ exports.userRegister_V2 = async function(req, res){
 
 exports.changePassword = async function (req, res){
 
-    if (await verifyToken(req)) {
+    const {
+        _id,
+        phone,
+        newPassword
+    } = req.body
 
-        const _id = req.body._id;
-        const phone = req.body.phone;
-        const newPassword = req.body.password;
+    if (!_id || !phone || !newPassword || !_id.trim() || !phone.trim() || !newPassword.trim()) {
 
-        if (!_id || !phone || !newPassword || !_id.trim() || !phone.trim() || !newPassword.trim()) {
+        res.status(400).json({ message: 'Invalid Request !' });
 
-            res.status(400).json({ message: 'Invalid Request !' });
-
-        } else {
-
-            if(await isPasswordValid(newPassword)){
-                await changePassword(_id, phone, newPassword, result => {
-                    const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
-
-                    res.status(result.status).json({ message: result.message, token: token })
-                }, err => {
-                    res.status(err.status).json({ message: err.message })
-                })
-            }else{
-                res.status(400).json({ message: "invalid_pass" })
-            }
-
-        }
     } else {
 
-        res.status(401).json({ message: 'Invalid Token !' });
+        if(await isPasswordValid(newPassword)){
+            await changePassword(_id, phone, newPassword, result => {
+                const token = jwt.sign(result, config.secret, { expiresIn: "365d" });
+
+                res.status(result.status).json({ message: result.message, token: token })
+            }, err => {
+                res.status(err.status).json({ message: err.message })
+            })
+        }else{
+            res.status(400).json({ message: "invalid_pass" })
+        }
+
     }
 }
 
 exports.getProfile = async function (req, res){
 
-    if (await verifyToken(req)) {
-
-        await getProfile(req.params.id, result => {
-            res.status(result.status).json(result)
-        }, err => {
-            res.status(err.status).json({ message: err.message })
-        })
-
-    } else {
-
-        res.status(401).json({ message: 'Invalid Token !' });
-    }
+    await getProfile(req.params.id, result => {
+        res.status(result.status).json(result)
+    }, err => {
+        res.status(err.status).json({ message: err.message })
+    })
 }
 
 exports.changePassword_V2 = async function (req, res){
 
-    if (await verifyToken(req)) {
+    const {
+        password,
+        newPassword
+    }= req.body
 
-        const oldPassword = req.body.password;
-        const newPassword = req.body.newPassword;
+    if (!password || !newPassword || !password.trim() || !newPassword.trim()) {
 
-        if (!oldPassword || !newPassword || !oldPassword.trim() || !newPassword.trim()) {
+        res.status(400).json({ message: 'Invalid Request !' });
 
-            res.status(400).json({ message: 'Invalid Request !' });
-
-        } else {
-
-            if(await isPasswordValid(newPassword)){
-                await changePassword(req.body._id, oldPassword, newPassword, result => {
-                    res.status(result.status).json({ message: result.message })
-                }, err => {
-                    res.status(err.status).json({ message: err.message })
-                })
-            }else{
-                res.status(400).json({ message: "invalid_pass" })
-            }
-
-        }
     } else {
 
-        res.status(401).json({ message: 'Invalid Token !' });
+        if(await isPasswordValid(newPassword)){
+            await changePassword(req.body._id, password, newPassword, result => {
+                res.status(result.status).json({ message: result.message })
+            }, err => {
+                res.status(err.status).json({ message: err.message })
+            })
+        }else{
+            res.status(400).json({ message: "invalid_pass" })
+        }
+
     }
 }

@@ -8,8 +8,7 @@ const {categoryService: {
 
 exports.addCategory = async function (req, res){
 
-    const name = req.body.name;
-    const description = req.body.description;
+    const { name, description } = req.body
 
     await addCategory(name, description, result => {
         res.status(result.status).json({message: result.message})
@@ -29,7 +28,7 @@ exports.getCategories = async function (req, res){
 
 exports.removeCategory = async function (req, res){
 
-    const _id = req.body._id;
+    const { _id } = req.body
 
     await removeCategory(_id, result => {
         res.status(result.status).json({message: result.message})

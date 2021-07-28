@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 const config = require("./../config/config");
 
+const { jwtMiddleware: {
+    verifyToken
+} } = require("./../helpers")
+
 const { faqController: {
     addFAQ,
     getFAQ,
@@ -10,11 +14,11 @@ const { faqController: {
 }} = require("./../controllers")
 
 module.exports = app => {
-    router.post('/add', addFAQ)
+    router.post('/add/:id', verifyToken, addFAQ)
 
     router.post('/faq', getFAQ)
 
-    router.post('/remove', removeFAQ)
+    router.post('/remove/:id', verifyToken, removeFAQ)
 
     app.use(config.api_v1 + "/faq", router)
 

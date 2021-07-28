@@ -7,10 +7,13 @@ const { faqService: {
 } } = require("./../services");
 
 exports.addFAQ = async function (req, res) {
-    const title = req.body.title;
-    const content = req.body.content;
-    const contacts = req.body.contacts;
-    const link = req.body.link;
+
+    const {
+        title,
+        content,
+        contacts,
+        link
+    } = req.body
 
     await addFAQ(title, content, contacts, link, result => {
         res.status(result.status).json({ message: result.message })

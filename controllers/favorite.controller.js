@@ -1,8 +1,5 @@
 'use strict'
 
-const { tokenHelper: {
-    verifyToken
-} } = require("./../helpers")
 const { favoriteService: {
     addFavorite,
     clearFavorite,
@@ -14,78 +11,56 @@ const { favoriteService: {
 
 exports.addFavorite = async function (req, res){
 
-    if(await verifyToken(req)){
+    const {
+        user,
+        house
+    } = req.body
 
-        const user = req.body.user._id;
-        const house = req.body.house._id;
+    await isFavorite(user._id, house._id, result => {
+        if(result.favorite === false){
 
-        await isFavorite(user, house, result => {
-            if(result.favorite === false){
+            addFavorite(user, house, result => {
+                res.status(result.status).json({message: result.message})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
-                addFavorite(user, house, result => {
-                    res.status(result.status).json({message: result.message})
-                }, err => {
-                    res.status(err.status).json({message: err.message})
-                })
+        }else{
 
-            }else{
+            removeFavorite(user, house, result => {
+                res.status(result.status).json({message: result.message})
+            }, err => {
+                res.status(err.status).json({message: err.message})
+            })
 
-                removeFavorite(user, house, result => {
-                    res.status(result.status).json({message: result.message})
-                }, err => {
-                    res.status(err.status).json({message: err.message})
-                })
-
-            }
-        }, err => {
-            res.status(err.status).json({message: err.message})
-        })
-
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
-
-    }
+        }
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 
 }
 
 exports.getFavorites = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const { user } = req.body
 
-        const user = req.body._id;
-
-        await getFavorites(user, result => {
-            res.status(result.status).json({favorites: result.favorites})
-        }, err => {
-            res.status(err.status).json({message: err.message})
-        })
-
-    }else{
-
-        res.status(400).json({message: 'Invalid Request !'});
-
-    }
+    await getFavorites(user._id, result => {
+        res.status(result.status).json({favorites: result.favorites})
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 
 }
 
 exports.clearFavorite = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const { user } = req.body
 
-        const user = req.body.user._id;
-
-        await clearFavorite(user, result => {
-            res.status(result.status).json({message: result.message})
-        }, err => {
-            res.status(err.status).json({message: err.message})
-        })
-
-    }else{
-
-        res.status(400).json({message: 'Invalid Request !'});
-
-    }
+    await clearFavorite(user._id, result => {
+        res.status(result.status).json({message: result.message})
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 
 
 }

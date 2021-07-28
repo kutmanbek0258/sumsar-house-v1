@@ -22,45 +22,37 @@ const {houseService: {
     clearHistory
 }} = require("./../services")
 
-const {tokenHelper: {
-    verifyToken
-}, files: {
+const {files: {
     saveBase64Image,
     deleteFile
 }} = require("./../helpers")
 
 exports.addHouse = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        address,
+        description,
+        phone,
+        price,
+        location,
+        user,
+        category,
+        image
+    } = req.body
 
-        const address = req.body.address;
-        const description = req.body.description;
-        const phone = req.body.phone;
-        const price = req.body.price;
-        const location = req.body.location;
-        const user = req.body.user._id;
-        const category = req.body.category._id;
-        const image = req.body.image;
+    if (!address || !description || !phone || !price || !location || !user || !category || !address.trim() || !description.trim() || !phone.trim() || !user.trim() || !category.trim()) {
 
-        if (!address || !description || !phone || !price || !location || !user || !category || !address.trim() || !description.trim() || !phone.trim() || !user.trim() || !category.trim()) {
+        res.status(400).json({message: 'Invalid Request !'});
 
-            res.status(400).json({message: 'Invalid Request !'});
+    } else{
 
-        } else{
+        await addHouse(address, description, location, phone, price, user._id, category._id, result => {
+            saveBase64Image(image, config.img_houses + result.id + "_1.png");
 
-            await addHouse(address, description, location, phone, price, user, category, result => {
-                saveBase64Image(image, config.img_houses + result.id + "_1.png");
-
-                res.status(result.status).json({message: result.message})
-            }, err => {
-                res.status(err.status).json({ message: err.message })
-            })
-
-        }
-
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
+            res.status(result.status).json({message: result.message})
+        }, err => {
+            res.status(err.status).json({ message: err.message })
+        })
 
     }
 
@@ -68,53 +60,47 @@ exports.addHouse = async function (req, res) {
 
 exports.editHouse = async function (req, res){
 
-    if(await verifyToken(req)){
+    const {
+        _id,
+        address,
+        description,
+        phone,
+        price,
+        location,
+        user,
+        category,
+        image
+    } = req.body
 
-        const _id = req.body._id;
-        const address = req.body.address;
-        const description = req.body.description;
-        const phone = req.body.phone;
-        const price = req.body.price;
-        const location = req.body.location;
-        const user = req.body.user._id;
-        const category = req.body.category._id;
-        const image = req.body.image;
+    if(!_id || !address || !description || !phone || !price || !location || !category || !_id.trim() || !address.trim() || !description.trim() || !phone.trim() || !category._id.trim()){
 
-        if(!_id || !address || !description || !phone || !price || !location || !category || !_id.trim() || !address.trim() || !description.trim() || !phone.trim() || !category.trim()){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
+        await isHouseUser(_id, user._id, result => {
+            if(result.house === true){
 
-            await isHouseUser(_id, user, result => {
-                if(result.house === true){
+                editHouse(_id, address, description, phone, price, location, category._id, result => {
+                    if(image){
 
-                    editHouse(_id, address, description, phone, price, location, category, result => {
-                        if(image){
+                        saveBase64Image(image, config.img_houses + _id + "_1.png");
 
-                            saveBase64Image(image, config.img_houses + _id + "_1.png");
+                    }
 
-                        }
+                    res.status(result.status).json({message: result.message});
+                }, err => {
+                    res.status(err.status).json({message: err.message})
+                })
 
-                        res.status(result.status).json({message: result.message});
-                    }, err => {
-                        res.status(err.status).json({message: err.message})
-                    })
+            }else{
 
-                }else{
+                res.status(400).json({message: 'Invalid reguest !'})
 
-                    res.status(400).json({message: 'Invalid reguest !'})
-
-                }
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
-        }
-
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
+            }
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -122,78 +108,66 @@ exports.editHouse = async function (req, res){
 
 exports.getHouse = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        _id,
+        user
+    } = req.body
 
-        const _id = req.body._id;
-        const user = req.body.user._id;
+    await getHouse(_id, resultHouse => {
+        let house = resultHouse.house.toObject();
 
-        await getHouse(_id, resultHouse => {
-            let house = resultHouse.house.toObject();
+        isFavorite(user._id, _id, result => {
+            house.favorite = result.favorite;
 
-            isFavorite(user, _id, result => {
-                house.favorite = result.favorite;
+            res.status(resultHouse.status).json(house);
 
-                res.status(resultHouse.status).json(house);
+            isHistory(user._id, _id, result => {
+                if(result.history === false){
 
-                isHistory(user, _id, result => {
-                    if(result.history === false){
+                    addHistory(user._id, _id);
 
-                        addHistory(user, _id);
-
-                    }
-                }, err => {
-                    res.status(err.status).json({message: err.message})
-                })
+                }
             }, err => {
                 res.status(err.status).json({message: err.message})
             })
         }, err => {
             res.status(err.status).json({message: err.message})
         })
-
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
-
-    }
+    }, err => {
+        res.status(err.status).json({message: err.message})
+    })
 
 }
 
 exports.getHouses = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        count,
+        limit,
+        location,
+        radius,
+        sort_date
+    } = req.body
 
-        const count = req.body.count;
-        const limit = req.body.limit;
-        const location = req.body.location;
-        const radius = req.body.radius;
-        const sort_date = req.body.sort_date;
+    if(!location){
 
-        if(!location){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
+        let sort;
 
-            let sort;
-
-            if(sort_date){
-                sort = {created_at: -1}
-            }else{
-                sort = null;
-            }
-
-            await getHouses(sort, count, limit, location, radius, result => {
-                res.status(result.status).json({houses: result.houses})
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
+        if(sort_date){
+            sort = {created_at: -1}
+        }else{
+            sort = null;
         }
 
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
+        await getHouses(sort, count, limit, location, radius, result => {
+            res.status(result.status).json({houses: result.houses})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -201,27 +175,21 @@ exports.getHouses = async function (req, res) {
 
 exports.getHousesUser = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        user
+    } = req.body
 
-        const user = req.body._id;
+    if(!user){
 
-        if(!user){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
-
-            await getHousesUser(user, result => {
-                res.status(result.status).json({houses: result.houses})
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
-        }
-
-    }else{
-
-        res.status(400).json({message: 'Invalid request !'})
+        await getHousesUser(user._id, result => {
+            res.status(result.status).json({houses: result.houses})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -229,28 +197,22 @@ exports.getHousesUser = async function (req, res) {
 
 exports.getHousesRadius = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        location,
+        radius
+    } = req.body
 
-        const location = req.body.location;
-        const radius = req.body.radius;
+    if(!location || !radius){
 
-        if(!location || !radius){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
-
-            await getHousesRadius(location, radius, result => {
-                res.status(result.status).json({houses: result.houses})
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
-        }
-
-    }else{
-
-        res.status(400).json({message: 'Invalid request !'})
+        await getHousesRadius(location, radius, result => {
+            res.status(result.status).json({houses: result.houses})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -258,40 +220,34 @@ exports.getHousesRadius = async function (req, res) {
 
 exports.getHousesSearch = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        count,
+        limit,
+        keyword,
+        location,
+        radius,
+        sort_date
+    } = req.body
 
-        const count = req.body.count;
-        const limit = req.body.limit;
-        const keyword = req.body.keyword;
-        const location = req.body.location;
-        const radius = req.body.radius;
-        const sort_date = req.body.sort_date;
+    if(!location){
 
-        if(!location){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
+        let sort;
 
-            var sort;
-
-            if(sort_date){
-                sort = {created_at: -1}
-            }else{
-                sort = null;
-            }
-
-            await getHousesKeyword(sort, keyword, count, limit, location, radius, result => {
-                res.status(result.status).json({houses: result.houses})
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
+        if(sort_date){
+            sort = {created_at: -1}
+        }else{
+            sort = null;
         }
 
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
+        await getHousesKeyword(sort, keyword, count, limit, location, radius, result => {
+            res.status(result.status).json({houses: result.houses})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -299,40 +255,34 @@ exports.getHousesSearch = async function (req, res) {
 
 exports.getHousesCategory = async function (req, res) {
 
-    if(await verifyToken(req)){
+    const {
+        count,
+        limit,
+        category,
+        location,
+        radius,
+        sort_date
+    } = req.body
 
-        const count = req.body.count;
-        const limit = req.body.limit;
-        const category = req.body.category._id;
-        const location = req.body.location;
-        const radius = req.body.radius;
-        const sort_date = req.body.sort_date;
+    if(!location){
 
-        if(!location){
+        res.status(400).json({message: 'Invalid request !'});
 
-            res.status(400).json({message: 'Invalid request !'});
+    } else{
 
-        } else{
+        let sort;
 
-            var sort;
-
-            if(sort_date){
-                sort = {created_at: -1}
-            }else{
-                sort = null;
-            }
-
-            await getHousesCategory(sort, category, count, limit, location, radius, result => {
-                res.status(result.status).json({houses: result.houses})
-            }, err => {
-                res.status(err.status).json({message: err.message})
-            })
-
+        if(sort_date){
+            sort = {created_at: -1}
+        }else{
+            sort = null;
         }
 
-    }else{
-
-        res.status(400).json({message: 'Invalid reguest !'})
+        await getHousesCategory(sort, category, count, limit, location, radius, result => {
+            res.status(result.status).json({houses: result.houses})
+        }, err => {
+            res.status(err.status).json({message: err.message})
+        })
 
     }
 
@@ -340,41 +290,32 @@ exports.getHousesCategory = async function (req, res) {
 
 exports.removeHouse = async function (req, res) {
 
+    const {
+        _id,
+        user
+    } = req.body
 
-    if(await verifyToken(req)){
+    await isHouseUser(_id, user._id, result => {
+        if(result.house === true){
 
-        const _id = req.body._id;
-        const user = req.body.user._id;
+            removeHouse(_id, result => {
+                deleteFile(config.img_houses + _id + "_1.png");
+                res.status(result.status).json({message: result.message})
 
-        await isHouseUser(_id, user, result => {
-            if(result.house === true){
+                clearHistory(_id);
 
-                removeHouse(_id, result => {
-                    deleteFile(config.img_houses + _id + "_1.png");
-                    res.status(result.status).json({message: result.message})
+                clearFavorite(_id);
+            }, err => {
+                res.status(result.status).json({message: result.message})
+            })
 
-                    clearHistory(_id);
+        }else{
 
-                    clearFavorite(_id);
-                }, err => {
-                    res.status(result.status).json({message: result.message})
-                })
+            res.status(400).json({message: 'Invalid request !'})
 
-            }else{
-
-                res.status(400).json({message: 'Invalid request !'})
-
-            }
-        }, err => {
-            res.status(400).json({message: 'Internal error !'})
-        })
-
-
-
-    }else{
-
-        res.status(400).json({message: 'Invalid request !'})
-
-    }
+        }
+    }, err => {
+        res.status(400).json({message: 'Internal error !'})
+    })
 
 }

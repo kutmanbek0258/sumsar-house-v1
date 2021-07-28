@@ -9,9 +9,8 @@ const { bannerService: {
 } } = require("./../services")
 
 exports.addBanner = async function (req, res) {
-    const description = req.body.description;
-    const link = req.body.link;
-    const location = req.body.location;
+
+    const { description, link, location } = req.body
 
     await addBanner(description, link, location, result => {
         res.status(result.status).json({ message: result.message })
@@ -23,7 +22,7 @@ exports.addBanner = async function (req, res) {
 
 exports.getBanners = async function (req, res) {
 
-    const location = req.body;
+    const { location } = req.body
     const limit = config.banner_limit;
     const radius = config.banner_radius;
 

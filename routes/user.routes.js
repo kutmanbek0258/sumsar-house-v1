@@ -4,8 +4,8 @@ const express = require("express");
 const router = express.Router();
 const config = require("./../config/config");
 
-const { tokenHelper: {
-    checkToken
+const { jwtMiddleware: {
+    verifyToken
 } } = require("./../helpers")
 
 const { userController: {
@@ -27,7 +27,7 @@ module.exports = app => {
 
     router.post('/password_v2', changePassword_V2)
 
-    router.get('/user/:id', checkToken, getProfile)
+    router.get('/user/:id', verifyToken, getProfile)
 
     router.put('/password', changePassword)
 

@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 const config = require("./../config/config");
 
+const { jwtMiddleware: {
+    verifyToken
+} } = require("./../helpers")
+
 const { historyController: {
     addHistory,
     historyClear,
@@ -12,13 +16,13 @@ const { historyController: {
 
 module.exports = app => {
 
-    router.post('/add', addHistory);
+    router.post('/add/:id', verifyToken, addHistory);
 
-    router.post('/list', historyList);
+    router.post('/list/:id', verifyToken, historyList);
 
-    router.post('/clear', historyClear);
+    router.post('/clear/:id', verifyToken, historyClear);
 
-    router.post('/remove', historyRemove);
+    router.post('/remove/:id', verifyToken, historyRemove);
 
     app.use(config.api_v1 + "/history", router)
 

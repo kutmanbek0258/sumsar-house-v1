@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 const config = require("./../config/config");
 
+const { jwtMiddleware: {
+    verifyToken
+} } = require("./../helpers")
+
 const { bannerController: {
     addBanner,
     removeBanner,
@@ -11,11 +15,11 @@ const { bannerController: {
 
 module.exports = app => {
 
-    router.post('/add', addBanner)
+    router.post('/add/:id', verifyToken, addBanner)
 
-    router.post('/remove', removeBanner)
+    router.post('/remove/:id', verifyToken, removeBanner)
 
-    router.post('/list', getBanners)
+    router.post('/list/:id', verifyToken, getBanners)
 
     app.use(config.api_v1 + "/banner", router)
 
