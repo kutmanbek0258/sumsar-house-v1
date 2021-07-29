@@ -7,6 +7,9 @@ const logger 	   = require('morgan');
 const mongoose = require('mongoose');
 const port 	   = process.env.PORT || 8088;
 const routes   = require("./routes");
+const pgdb = require("./lib/db-pg");
+const config = require("./lib/util-config");
+const log = require("./lib/util-log");
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/u_rent', {
@@ -20,6 +23,16 @@ mongoose.connect('mongodb://localhost:27017/u_rent', {
     "user": "admin",
     "pass": "myadminpassword"
 });*/
+
+(async () => {
+    try {
+        await config.init();
+        await log.init();
+        await pgdb.init();
+    } catch (err) {
+        console.log("Ошибка при инициализации сервиса: " + (err.stack || err));
+    }
+})();
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
