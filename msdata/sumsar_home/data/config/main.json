@@ -1,0 +1,165 @@
+{
+  "logLevel": "trace",
+  "logMode": "console",
+  "traceFilterByUserId": 0,
+
+  "rpDbHost": "localhost",
+  "rpDbPort": "5432",
+  "rpDbUser": "postgres",
+  "rpDbName": "sumsar_home",
+  "rpDbPass": "AN2768Kutman",
+  "rpDbPoolSize": 50,
+  "rpDbIdleTimeoutSec": 30,
+
+  "sessionQueryLimit": 10000,
+
+  "allowIpOnlyAccess": true,
+
+  "callersAccess": [
+    {
+      "callerCode": "Sumsar Home App",
+      "callerToken": "3f34gFG#4ddfs34",
+      "callerIps": ["172.17.0.1/16", "212.112.104.218/16"],
+      "callerAccess": [
+        {"method": "readSession_v1", "access": "session"},
+        {"method": "createSession_v1", "access": "allow"},
+        {"method": "deleteSession_v1", "access": "session"},
+        {"method": "readUser_v1", "access": "session"},
+        {"method": "readUser_v2", "access": "session"},
+        {"method": "updateUser_v1", "access": "session"},
+        {"method": "updateUser_v2", "access": "session"},
+        {"method": "getAccounts_v1", "access": "session"},
+        {"method": "readAccount_v1", "access": "session"},
+        {"method": "getUserTransactions_v1", "access": "session"},
+        {"method": "readUserTransaction_v1", "access": "session"},
+        {"method": "createUserTransaction_v1", "access": "session"},
+        {"method": "deleteUserTransaction_v1", "access": "session"},
+        {"method": "getStaff_v1", "access": "session"},
+        {"method": "createStaff_v1", "access": "session"},
+        {"method": "createStaff_v2", "access": "session"},
+        {"method": "readStaff_v1", "access": "session"},
+        {"method": "updateStaff_v1", "access": "session"},
+        {"method": "deleteStaff_v1", "access": "session"},
+        {"method": "deleteStaff_v2", "access": "session"},
+        {"method": "getSalespoints_v1", "access": "session"},
+        {"method": "createSalespoint_v1", "access": "session"},
+        {"method": "readSalespoint_v1", "access": "session"},
+        {"method": "updateSalespoint_v1", "access": "session"},
+        {"method": "createImage_v1", "access": "session"},
+        {"method": "readImage_v1", "access": "session"}
+      ]
+    },
+    {
+      "callerCode": "DBO",
+      "callerToken": "243f344#34%rdfc3",
+      "callerIps": ["172.16.0.1/16"],
+      "callerAccess": [
+        {"method": "createUser_v1", "access": "allow"},
+        {"method": "deleteUser_v1", "access": "allow"},
+        {"method": "readUser_v1", "access": "allow"},
+        {"method": "updateUser_v1", "access": "allow"}
+      ]
+    },
+    {
+      "callerCode": "Test App",
+      "callerToken": "TTOKEN",
+      "callerIps": ["127.0.0.1/32"],
+      "callerAccess": [
+        {"method": "getSessions_v1", "access": "allow"},
+        {"method": "readSession_v1", "access": "allow"},
+        {"method": "createSession_v1", "access": "allow"},
+        {"method": "updateSession_v1", "access": "allow"},
+        {"method": "deleteSession_v1", "access": "allow"},
+        {"method": "readUser_v1", "access": "allow"},
+        {"method": "readUser_v2", "access": "allow"},
+        {"method": "updateUser_v1", "access": "allow"},
+        {"method": "updateUser_v2", "access": "allow"},
+        {"method": "getAccounts_v1", "access": "session"},
+        {"method": "getUserTransactions_v1", "access": "allow"},
+        {"method": "readUserTransaction_v1", "access": "allow"},
+        {"method": "createUserTransaction_v1", "access": "allow"},
+        {"method": "deleteUserTransaction_v1", "access": "session"},
+        {"method": "getUsers_v1", "access": "allow"},
+        {"method": "getUsers_v2", "access": "allow"},
+        {"method": "createUser_v1", "access": "allow"},
+        {"method": "createUser_v2", "access": "allow"},
+        {"method": "deleteUser_v1", "access": "allow"},
+        {"method": "deleteUser_v2", "access": "allow"},
+        {"method": "getStaff_v1", "access": "allow"},
+        {"method": "createStaff_v1", "access": "allow"},
+        {"method": "createStaff_v2", "access": "allow"},
+        {"method": "readStaff_v1", "access": "allow"},
+        {"method": "updateStaff_v1", "access": "allow"},
+        {"method": "deleteStaff_v1", "access": "allow"},
+        {"method": "deleteStaff_v2", "access": "allow"},
+        {"method": "getSalespoints_v1", "access": "allow"},
+        {"method": "createSalespoint_v1", "access": "allow"},
+        {"method": "readSalespoint_v1", "access": "allow"},
+        {"method": "updateSalespoint_v1", "access": "allow"},
+        {"method": "deleteSalespoint_v1", "access": "allow"},
+        {"method": "createImage_v1", "access": "allow"},
+        {"method": "readImage_v1", "access": "allow"}
+      ]
+    }
+  ],
+
+  "apiTcpPort": 8081,
+  "apiBindIp": "0.0.0.0",
+
+  "SMSProvider": "smpp-router",
+
+  "SMSProviderLogin": "ribkg",
+  "SMSProviderPass": "Ribkg12",
+  "SMSLoginOtpTemplate": "Код для подтверждения входа: <otp>. Никому не сообщайте этот код.",
+  "SMSPaymentOtpTemplate": "Код для подтверждения платежа: <otp>. Никому не сообщайте этот код.",
+
+  "SMPPconf": [
+      {
+          "code": "prod",
+          "prefixes": ["993"],
+          "isDefault": false,
+          "server": "smpp.smsc.ru",
+          "port": 3700,
+          "systemId": "ribkg",
+          "password": "e5741397"
+      },
+      {
+          "code": "test",
+          "isDefault": true,
+          "prefixes": ["996", "7"],
+          "server": "smpp.smsc.ru",
+          "port": 3700,
+          "systemId": "ribkg",
+          "password": "e5741397"
+      }
+  ],
+
+  "loginFailAttemptsUntilSoftBlock": 5,
+  "softBlockPeriodMin": 10,
+  "loginFailAttemptsUntilHardBlock": 10,
+
+  "otpApproveSum": 999999999,
+  "maxLimitSum": 999999999999,
+
+  "maxPaymentApproveTimeMin": 10,
+  "maxPaymentApproveOtpTryCount": 3,
+
+  "testPsQueueIntervalSec": 15,
+  "psQueueIntervalSec": 5,
+  "notifyQueueIntervalSec": 5,
+  "userDefaultLang"  : "rus",
+  "systemDefaultLang"  : "rus",
+  "procAccnUpdatePeriodSec" : 120,
+  "procBalUpdatePeriodSec" : 5,
+  "procEmulatorMode": false,
+  "procWsdlUrl": "https://172.16.1.67:8443/cxf/cap/soap12/v3/cap?wsdl",
+  "procCurrency": "TMT",
+  "firebaseDatabaseUrl": "https://rysgalpay-8cb09.firebaseio.com",
+  "mongoDbUrl": "mongodb://172.16.1.122:27017",
+  "mongoDbName": "rysgal",
+  "fakeOTP": "1111",
+  "fluentdHost": "localhost",
+  "fluentdPort": 8001,
+  "fluentdServiceName": "rysgalpay-api",
+  "fluentdInstanceName": "test"
+}

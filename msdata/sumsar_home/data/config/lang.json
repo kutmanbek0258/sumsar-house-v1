@@ -1,0 +1,188 @@
+{
+  "E_DatabaseError": {
+    "rus": "Ошибка при запросе в БД",
+    "eng": "Database error",
+    "tuk": "E_DatabaseError"
+  },
+
+  "E_APINotAllowed": {
+    "rus": "У вызывающего сервиса нет доступа к API",
+    "eng": "API access not allowed",
+    "tuk": "E_APINotAllowed"
+  },
+  "E_MethodNotAllowed": {
+    "rus": "У вызывающего сервиса нет доступа к этому методу",
+    "eng": "Method access not allowed",
+    "tuk": "E_MethodNotAllowed"
+  },
+  "E_MethodParamsNotAllowed": {
+    "rus": "У вызывающего сервиса нет доступа к вызову этого метода с такими параметрами",
+    "eng": "The calling service does not have access to calling this method with these parameters",
+    "tuk": "E_MethodParamsNotAllowed"
+  },
+  "E_AccessCheckError": {
+    "rus": "Ошибка при проверке доступа",
+    "eng": "Access check error",
+    "tuk": "E_AccessCheckError"
+  },
+  "E_UserNotFound": {
+    "rus": "Пользователь не найден",
+    "eng": "User not found",
+    "tuk": "E_UserNotFound"
+  },
+  "E_AccountNotFound": {
+    "rus": "Счет не найден",
+    "eng": "Account not found",
+    "tuk": "E_AccountNotFound"
+  },
+  "E_TransactionNotFound": {
+    "rus": "Транзакция не найдена",
+    "eng": "Transaction not found",
+    "tuk": "E_TransactionNotFound"
+  },
+  "E_SalespointNotFound": {
+    "rus": "Точка продаж не найдена",
+    "eng": "Salespoint not found",
+    "tuk": "E_SalespointNotFound"
+  },
+  "E_SessionNotFound": {
+    "rus": "Сессия не найдена",
+    "eng": "Session mnot found",
+    "tuk": "E_SessionNotFound"
+  },
+  "E_StaffNotFound": {
+    "rus": "Сотрудник не найден",
+    "eng": "Staff not found",
+    "tuk": "E_StaffNotFound"
+  },
+  "E_SessionTokenRequired": {
+    "rus": "Вызывающий сервис должен передать токен сессии",
+    "eng": "The caller must pass the session token.",
+    "tuk": "E_SessionTokenRequired"
+  },
+  "E_SessionAccessNotAllowed": {
+    "rus": "У пользователя нет доступа к запрашиваемым данным",
+    "eng": "The user does not have access to the requested data.",
+    "tuk": "E_SessionAccessNotAllowed"
+  },
+  "E_IncorrectParams": {
+    "rus": "В метод переданы некорректные параметры",
+    "eng": "Invalid parameters passed to method",
+    "tuk": "E_IncorrectParams"
+  },
+  "E_IncorrectLogin": {
+    "rus": "Некорректный логин или пароль",
+    "eng": "Invalid username or password",
+    "tuk": "E_IncorrectLogin"
+  },
+  "E_UserBlocked": {
+    "rus": "Пользователь заблокирован",
+    "eng": "User blocked",
+    "tuk": "E_UserBlocked"
+  },
+  "E_SMSError": {
+    "rus": "Ошибка SMS сервиса",
+    "eng": "SMS serice error",
+    "tuk": "E_SMSError"
+  },
+  "E_IncorrectSessionApprove": {
+    "rus": "Некорректные данные для второго шага аутентификации",
+    "eng": "Incorrect data for the second authentication step",
+    "tuk": "E_IncorrectSessionApprove"
+  },
+  "E_UserSoftBlock": {
+    "rus": "Пользователь временно заблокирован",
+    "eng": "User temporarily blocked",
+    "tuk": "E_UserSoftBlock"
+  },
+  "E_SenderAccountNotFound": {
+    "rus": "Счет отправителя не найден",
+    "eng": "Sender account not found",
+    "tuk": "E_SenderAccountNotFound"
+  },
+  "E_AccountBlocked": {
+    "rus": "Счет заблокирован",
+    "eng": "Account blocked",
+    "tuk": "E_AccountBlocked"
+  },
+  "E_ProcessingError": {
+    "rus": "Ошибка при запросе в процессинг",
+    "eng": "Processing error",
+    "tuk": "E_ProcessingError"
+  },
+  "E_NotEnoughBalance": {
+    "rus": "Недостаточный баланс на счете отправителя",
+    "eng": "Insufficient balance in the sender's account",
+    "tuk": "E_NotEnoughBalance"
+  },
+  "E_PaymentPermitted": {
+    "rus": "Платеж запрещен процессингом",
+    "eng": "Payment permitted",
+    "tuk": "E_PaymentPermitted"
+  },
+  "E_PaymentLimit": {
+    "rus": "Сумма платежа превышает установленный лимит",
+    "eng": "Payment amount exceeds the limit",
+    "tuk": "E_PaymentLimit"
+  },
+  "E_PaymentNotFound": {
+    "rus": "Платеж не найден",
+    "eng": "Payment not found",
+    "tuk": "E_PaymentNotFound"
+  },
+  "E_PaymentProcessing": {
+    "rus": "Платеж уже обрабатывается",
+    "eng": "Payment is already being processed",
+    "tuk": "E_PaymentProcessing"
+  },
+  "E_ApproveTimeout": {
+    "rus": "Время на подтверждение платежа истекло",
+    "eng": "Time to confirm payment expired",
+    "tuk": "E_ApproveTimeout"
+  },
+  "E_ApproveTriesLimit": {
+    "rus": "Количество подтверждений платежа превысило лимит",
+    "eng": "The number of payment confirmation exceeded the limit",
+    "tuk": "E_ApproveTriesLimit"
+  },
+  "E_ApproveIncorrectOtpCode": {
+    "rus": "Некорректный OTP код подтверждения платежа",
+    "eng": "Incorrect OTP payment confirmation code",
+    "tuk": "E_ApproveIncorrectOtpCode"
+  },
+  "E_LangNotSupported": {
+    "rus": "Язык системы не поддерживается",
+    "eng": "Language not supported",
+    "tuk": "E_LangNotSupported"
+  },
+  "E_UserExists": {
+    "rus": "Пользователь с таким логином уже существует",
+    "eng": "User exists",
+    "tuk": "E_UserExists"
+  },
+  "E_NoAccounts": {
+    "rus": "У пользователя нет ни одного активного счета",
+    "eng": "User has no active account",
+    "tuk": "E_NoAccounts"
+  },
+  "E_ImageError": {
+    "rus": "Ошибка при сохранении изображения",
+    "eng": "Image save error",
+    "tuk": "E_ImageError"
+  },
+  "E_FileNotFound": {
+    "rus": "Файл не найден",
+    "eng": "File Not Found",
+    "tuk": "E_FileNotFound"
+  },
+  "E_NotImplemented": {
+      "rus": "Метод не реализован",
+      "eng": "Method not implemented",
+      "tuk": "E_NotImplemented"
+   },
+  "E_ServerError": {
+      "rus": "Ошибка сервера",
+      "eng": "Server error",
+      "tuk": "E_ServerError"
+   }
+}
