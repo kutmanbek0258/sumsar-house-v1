@@ -29,6 +29,20 @@ mongoose.connect('mongodb://localhost:27017/u_rent', {
         await config.init();
         await log.init();
         await pgdb.init();
+
+        const q = "SELECT _id, description, link, latitude, longitude,\n" +
+            "       ACOS( SIN( PI() * $1 / 180.0) *\n" +
+            "             SIN(PI() * banners.latitude / 180.0) +\n" +
+            "             COS(PI() * $1 / 180.0) *\n" +
+            "             COS(PI() * banners.latitude / 180.0) *\n" +
+            "             COS(PI() * banners.longitude / 180.0-PI() * $2 / 180.0)) * 6371\n" +
+            "AS distance FROM banners ORDER BY distance;"
+        const params = [42.8889713,74.6049057]
+
+        const data = await pgdb.execSync(q, params, false, null);
+
+        console.log(data)
+
     } catch (err) {
         console.log("Ошибка при инициализации сервиса: " + (err.stack || err));
     }

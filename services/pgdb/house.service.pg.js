@@ -48,20 +48,25 @@ exports.getHouse = async function(_id, callback, error){
 }
 
 exports.isHouseUser = async function(_id, user, callback, error){
-    await house.find({_id: _id, user: user})
 
-        .then(houses => {
-            if(houses.length>0){
-                callback({status: 200, house: true})
-            }else{
-                callback({status: 200, house: false})
-            }
-        })
+    const q = "select _id from houses where _id = $1"
+    const params = [_id]
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
+    const data = await pg.execSync(q, params, false, null)
+
+    if(!data || data.length === 0){
+        error({ status: 500, message: 'Internal Server Error !' })
+    }else {
+        if(data.length>0){
+            callback({status: 200, house: true})
+        }else{
+            callback({status: 200, house: false})
+        }
+    }
 }
 
 exports.getHouses = async function(sort, count, limit, location, radius, callback, error){
+
     await house.find({
         location: {
             $near :{
