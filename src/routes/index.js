@@ -10,6 +10,7 @@ const userRoutes = require("./user.routes")
 const viewRoutes = require("./view.routes")
 
 let routes = app => {
+
     bannerRoutes(app)
     categoryRoutes(app)
     faqRoutes(app)

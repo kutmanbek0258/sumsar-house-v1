@@ -9,5 +9,7 @@
    "history_limit" : 100,
    "favorite_limit" : 100,
    "default_pass" : "defpass123",
-   "api_v1": "/api/v1"
+   "api_v1": "/api/v1",
+   "log_level": "dev",
+   "log_mode": "console"
 }

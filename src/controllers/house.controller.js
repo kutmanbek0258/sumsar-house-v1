@@ -1,6 +1,6 @@
 'use strict'
 
-const config = require("./../config/config.json")
+const config = require("../config/config.json")
 
 const {houseService: {
     addHouse,
@@ -20,12 +20,12 @@ const {houseService: {
     isHistory,
     addHistory,
     clearHistory
-}} = require("./../services")
+}} = require("../services")
 
 const {files: {
     saveBase64Image,
     deleteFile
-}} = require("./../helpers")
+}} = require("../helpers")
 
 exports.addHouse = async function (req, res) {
 

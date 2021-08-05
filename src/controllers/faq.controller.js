@@ -4,7 +4,7 @@ const { faqService: {
     addFAQ,
     getFAQ,
     removeFAQ
-} } = require("./../services");
+} } = require("../services");
 
 exports.addFAQ = async function (req, res) {
 

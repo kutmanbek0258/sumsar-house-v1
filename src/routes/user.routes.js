@@ -2,11 +2,11 @@
 
 const express = require("express");
 const router = express.Router();
-const config = require("./../config/config");
+const config = require("../config/config.json");
 
 const { jwtMiddleware: {
     verifyToken
-} } = require("./../helpers")
+} } = require("../helpers")
 
 const { userController: {
     userAuthenticate,
@@ -15,7 +15,7 @@ const { userController: {
     changePassword_V2,
     userRegister,
     userRegister_V2
-} } = require("./../controllers")
+} } = require("../controllers")
 
 module.exports = app => {
 

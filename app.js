@@ -6,12 +6,16 @@ const bodyParser = require('body-parser');
 const logger 	   = require('morgan');
 const mongoose = require('mongoose');
 const port 	   = process.env.PORT || 8088;
-const routes   = require("./routes");
+const routes   = require("./src/routes");
+const config = require("./src/config/config.json");
+const fs = require('fs')
+const path = require('path')
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/u_rent', {
     useMongoClient: true
 });
+
 /*mongoose.connect('mongodb://127.0.0.1:27017/u_rent', {
     useUnifiedTopology: true,
     useNewUrlParser: true,
@@ -21,9 +25,16 @@ mongoose.connect('mongodb://localhost:27017/u_rent', {
     "pass": "myadminpassword"
 });*/
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
-app.use(logger('dev'));
+
+if(config.log_mode === "file"){
+    app.use(logger(config.log_level, { stream: accessLogStream }))
+}else if(config.log_mode === "console"){
+    app.use(logger(config.log_level))
+}
 
 routes(app)
 

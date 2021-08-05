@@ -1,12 +1,12 @@
 'use strict'
 
-const config = require("./../config/config.json")
+const config = require("../config/config.json")
 
 const { bannerService: {
     addBanner,
     getBanners,
     removeBanner
-} } = require("./../services")
+} } = require("../services")
 
 exports.addBanner = async function (req, res) {
 

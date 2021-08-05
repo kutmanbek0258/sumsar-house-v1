@@ -6,13 +6,13 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const { validator: {
     isPasswordValid
-}} = require("./../helpers");
+}} = require("../helpers");
 const { userService: {
     loginUser,
     changePassword,
     getProfile,
     registerUser
-}} = require("./../services")
+}} = require("../services")
 
 exports.userAuthenticate = async function(req, res){
 

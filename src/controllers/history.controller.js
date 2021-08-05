@@ -6,7 +6,7 @@ const { historyService: {
     isHistory,
     getHistories,
     removeHistory
-} } = require("./../services")
+} } = require("../services")
 
 exports.addHistory = async function (req, res) {
 

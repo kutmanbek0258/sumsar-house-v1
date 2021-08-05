@@ -4,7 +4,7 @@ const {categoryService: {
     addCategory,
     removeCategory,
     getCategories
-}} = require("./../services")
+}} = require("../services")
 
 exports.addCategory = async function (req, res){
 

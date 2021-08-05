@@ -6,7 +6,7 @@ const { favoriteService: {
     isFavorite,
     removeFavorite,
     getFavorites
-}} = require("./../services")
+}} = require("../services")
 
 
 exports.addFavorite = async function (req, res){
