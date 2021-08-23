@@ -3,6 +3,14 @@
 const history = require('../models/history');
 const config = require('../config/config.json');
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.addHistory = async function(user, house, callback, error){
     const newHistory = new history({
 
@@ -19,6 +27,13 @@ exports.addHistory = async function(user, house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.clearHistory = async function(user, callback, error){
     await history.deleteMany({ user: user })
 
@@ -27,6 +42,13 @@ exports.clearHistory = async function(user, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.clearHistoryHouse = async function(house, callback, error){
     await history.deleteMany({ house: house })
 
@@ -35,6 +57,14 @@ exports.clearHistoryHouse = async function(house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.isHistory = async function(user, house, callback, error){
     await history.find({ user: user, house: house })
 
@@ -50,6 +80,13 @@ exports.isHistory = async function(user, house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getHistories = async function(user, callback, error){
     await history.find({ user: user })
 
@@ -76,6 +113,14 @@ exports.getHistories = async function(user, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.removeHistory = async function(user, house, callback, error){
     await history.deleteOne({ user: user, house: house })
 

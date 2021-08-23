@@ -2,6 +2,16 @@
 
 const faq = require('../models/faq');
 
+/**
+ *
+ * @param title
+ * @param content
+ * @param contacts
+ * @param link
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.addFAQ = async function(title, content, contacts, link, callback, error){
     const newFAQ = new faq({
 
@@ -20,6 +30,12 @@ exports.addFAQ = async function(title, content, contacts, link, callback, error)
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getFAQ = async function(callback, error){
     await faq.findOne()
 
@@ -28,6 +44,13 @@ exports.getFAQ = async function(callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param id
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.removeFAQ = async function(id, callback, error){
     faq.deleteOne({ _id: id })
 

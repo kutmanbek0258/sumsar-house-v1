@@ -3,6 +3,14 @@
 const favorite = require('../models/favorite');
 const config = require('../config/config.json');
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.addFavorite = async function(user, house, callback, error){
     const newFavorite = new favorite({
 
@@ -19,6 +27,13 @@ exports.addFavorite = async function(user, house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.clearFavorite = async function(user, callback, error){
     await favorite.deleteMany({ user: user })
 
@@ -27,6 +42,13 @@ exports.clearFavorite = async function(user, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.clearFavoriteHouse = async function(house, callback, error){
     favorite.deleteMany({ house: house })
 
@@ -35,6 +57,14 @@ exports.clearFavoriteHouse = async function(house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.isFavorite = async function(user, house, callback, error){
     await favorite.find({ user: user, house: house })
 
@@ -50,6 +80,13 @@ exports.isFavorite = async function(user, house, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getFavorites = async function(user, callback, error){
     await favorite.find({ user: user })
 
@@ -76,6 +113,14 @@ exports.getFavorites = async function(user, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param user
+ * @param house
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.removeFavorite = async function(user, house, callback, error){
     await favorite.deleteOne({ user: user, house: house })
 

@@ -2,6 +2,14 @@
 
 const category = require('../models/category');
 
+/**
+ *
+ * @param name
+ * @param description
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.addCategory = async function(name, description, callback, error){
     const newCategory = new category({
 
@@ -18,6 +26,12 @@ exports.addCategory = async function(name, description, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getCategories = async function(callback, error){
     await category.find()
 
@@ -26,6 +40,13 @@ exports.getCategories = async function(callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param _id
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.removeCategory = async function(_id, callback, error){
     await category.deleteOne({ _id: _id })
 

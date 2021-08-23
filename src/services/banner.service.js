@@ -2,6 +2,15 @@
 
 const banner = require('../models/banner');
 
+/**
+ *
+ * @param description
+ * @param link
+ * @param location
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.addBanner = async function(description, link, location, callback, error){
     const newBanner = new banner({
 
@@ -19,6 +28,15 @@ exports.addBanner = async function(description, link, location, callback, error)
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param limit
+ * @param location
+ * @param radius
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getBanners = async function(limit, location, radius, callback, error){
     await banner.find({
         location: {
@@ -38,6 +56,13 @@ exports.getBanners = async function(limit, location, radius, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param id
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.removeBanner = async function(id, callback, error){
     await banner.deleteOne({ _id: id })
 

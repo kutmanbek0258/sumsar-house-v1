@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 exports.verifyToken = async function (req, res, next) {
     const token = req.headers['x-access-token'];
     const id = req.params.id;
@@ -21,6 +28,11 @@ exports.verifyToken = async function (req, res, next) {
     }
 };
 
+/**
+ *
+ * @param req
+ * @returns {Promise<*|boolean>}
+ */
 exports.decodeToken = async function(req) {
     const token = req.headers['x-access-token'];
     if (token) {
@@ -34,6 +46,13 @@ exports.decodeToken = async function(req) {
     }
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 exports.checkToken = async function(req, res, next){
     const token = req.headers['x-access-token'];
     if (token) {

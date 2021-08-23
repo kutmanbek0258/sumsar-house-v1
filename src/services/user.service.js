@@ -4,6 +4,14 @@ const user = require('../models/user');
 const bcrypt = require('bcryptjs');
 const config = require('../config/config.json');
 
+/**
+ *
+ * @param phone
+ * @param password
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.loginUser = async function(phone, password, callback, error){
     await user.find({ phone: phone })
 
@@ -37,6 +45,15 @@ exports.loginUser = async function(phone, password, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param phone
+ * @param password
+ * @param newPassword
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.changePassword = async function(phone, password, newPassword, callback, error){
     await user.find({ phone: phone })
 
@@ -64,6 +81,13 @@ exports.changePassword = async function(phone, password, newPassword, callback, 
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param phone
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.getProfile = async function(phone, callback, error){
     await user.find({ phone: phone }, { name: 1, phone: 1, created_at: 1, _id: 1, fast: 1 })
 
@@ -72,6 +96,16 @@ exports.getProfile = async function(phone, callback, error){
         .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
 };
 
+/**
+ *
+ * @param name
+ * @param email
+ * @param phone
+ * @param password
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.registerUser = async function(name, email, phone, password, callback, error){
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
@@ -105,6 +139,15 @@ exports.registerUser = async function(name, email, phone, password, callback, er
         });
 };
 
+/**
+ *
+ * @param _id
+ * @param phone
+ * @param newPassword
+ * @param callback
+ * @param error
+ * @returns {Promise<void>}
+ */
 exports.changePassword = async function(_id, phone, newPassword, callback, error){
     await user.find({ _id: _id })
 
