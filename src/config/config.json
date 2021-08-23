@@ -1,0 +1,29 @@
+{
+   "name" : "Kutman Smanov",
+   "email" : "smanovkutman0258@gmail.com",
+   "password" : "Smanov0258",
+   "secret" : "kUtmansManov",
+   "img_houses" : "public/images/houses/",
+   "banner_limit" : 10,
+   "banner_radius" : 20000,
+   "history_limit" : 100,
+   "favorite_limit" : 100,
+   "default_pass" : "defpass123",
+   "api_v1": "/api/v1",
+   "log_level": "dev",
+   "log_mode": "console",
+   "messages": {
+      "e_invalid_pass": {
+         "en": {
+            "status": 400,
+            "code": "e_invalid_pass",
+            "message": "Invalid password"
+         },
+         "ru": {
+            "status": 400,
+            "code": "e_invalid_pass",
+            "message": "Недопустимый пароль"
+         }
+      }
+   }
+}

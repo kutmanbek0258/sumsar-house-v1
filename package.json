@@ -2,6 +2,10 @@
   "name": "u_transport",
   "version": "1.0.0",
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon node app.js"
+  },
   "dependencies": {
     "basic-auth": "^1.0.4",
     "bcryptjs": "^2.3.0",
@@ -11,11 +15,15 @@
     "mongoose": "^4.6.0",
     "morgan": "^1.7.0",
     "nodemailer": "^2.6.0",
+    "nodemon": "^2.0.12",
     "password-validator": "^5.0.3",
     "pug": "^2.0.4",
     "randomstring": "^1.1.5",
     "shortid": "^2.2.15",
     "socket.io": "^2.3.0",
     "socketio-jwt": "^4.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0"
   }
 }
