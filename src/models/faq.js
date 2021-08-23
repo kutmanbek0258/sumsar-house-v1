@@ -2,14 +2,14 @@
 
 const mongoose = require('mongoose');
 
-const faqSchema = mongoose.Schema({ 
+const faqSchema = mongoose.Schema({
 
-	title           : String,
-	content         : String,
-	contacts        : String,
-	link            : String,
-	created_at		: Date
-	
+    title           : String,
+    content         : String,
+    contacts        : String,
+    link            : String,
+    created_at		: Date
+
 });
 
-module.exports = mongoose.model('faq', faqSchema);        
+module.exports = mongoose.model('faq', faqSchema);

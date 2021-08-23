@@ -14,10 +14,10 @@ exports.addBanner = async function(description, link, location, callback, error)
 
     await newBanner.save()
 
-        .then(() => callback({status: 200, message: "added success"}))
+        .then(() => callback({ status: 200, message: 'added success' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.getBanners = async function(limit, location, radius, callback, error){
     await banner.find({
@@ -31,17 +31,17 @@ exports.getBanners = async function(limit, location, radius, callback, error){
 
         .limit( limit )
 
-        .sort({created_at: -1})
+        .sort({ created_at: -1 })
 
-        .then(banners => callback({ status: 200, banners: banners}))
+        .then(banners => callback({ status: 200, banners: banners }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.removeBanner = async function(id, callback, error){
     await banner.deleteOne({ _id: id })
 
-        .then(() => callback({ status: 200,  message: 'Success deleted !' }))
+        .then(() => callback({ status: 200, message: 'Success deleted !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};

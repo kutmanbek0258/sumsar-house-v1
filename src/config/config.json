@@ -11,5 +11,19 @@
    "default_pass" : "defpass123",
    "api_v1": "/api/v1",
    "log_level": "dev",
-   "log_mode": "console"
+   "log_mode": "console",
+   "messages": {
+      "e_invalid_pass": {
+         "en": {
+            "status": 400,
+            "code": "e_invalid_pass",
+            "message": "Invalid password"
+         },
+         "ru": {
+            "status": 400,
+            "code": "e_invalid_pass",
+            "message": "Недопустимый пароль"
+         }
+      }
+   }
 }

@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const config = require('../config/config.json');
 
 exports.loginUser = async function(phone, password, callback, error){
-    await user.find({phone: phone})
+    await user.find({ phone: phone })
 
         .then(users => {
 
@@ -26,7 +26,7 @@ exports.loginUser = async function(phone, password, callback, error){
 
             if (bcrypt.compareSync(password, hashed_password)) {
 
-                callback({ status: 200, message: phone, user : { _id: user._id, phone: user.phone }});
+                callback({ status: 200, message: phone, user : { _id: user._id, phone: user.phone } });
 
             } else {
 
@@ -34,8 +34,8 @@ exports.loginUser = async function(phone, password, callback, error){
             }
         })
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.changePassword = async function(phone, password, newPassword, callback, error){
     await user.find({ phone: phone })
@@ -59,18 +59,18 @@ exports.changePassword = async function(phone, password, newPassword, callback, 
             }
         })
 
-        .then(user => callback({ status: 200, message: 'Password Updated Successfully !' }))
+        .then(() => callback({ status: 200, message: 'Password Updated Successfully !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.getProfile = async function(phone, callback, error){
     await user.find({ phone: phone }, { name: 1, phone: 1, created_at: 1, _id: 1, fast: 1 })
 
-        .then(users => callback({ status: 200, users: users[0]}))
+        .then(users => callback({ status: 200, users: users[0] }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.registerUser = async function(name, email, phone, password, callback, error){
     const salt = bcrypt.genSaltSync(10);
@@ -103,14 +103,14 @@ exports.registerUser = async function(name, email, phone, password, callback, er
                 error({ status: 500, message: 'Internal Server Error !' });
             }
         });
-}
+};
 
 exports.changePassword = async function(_id, phone, newPassword, callback, error){
     await user.find({ _id: _id })
 
         .then(users => {
 
-            var password = config.default_pass;
+            let password = config.default_pass;
 
             let user = users[0];
             const hashed_password = user.hashed_password;
@@ -133,7 +133,7 @@ exports.changePassword = async function(_id, phone, newPassword, callback, error
             }
         })
 
-        .then(user => callback({ status: 200, message: phone }))
+        .then(() => callback({ status: 200, message: phone }))
 
-        .catch(err => error({ status: 500, message: 'User existed !' }));
-}
+        .catch(() => error({ status: 500, message: 'User existed !' }));
+};

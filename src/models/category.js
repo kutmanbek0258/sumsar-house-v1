@@ -2,12 +2,12 @@
 
 const mongoose = require('mongoose');
 
-const category = mongoose.Schema({ 
+const category = mongoose.Schema({
 
-	name            : String,
-	description     : String,
-	created_at		: Date
-	
+    name            : String,
+    description     : String,
+    created_at		: Date
+
 });
 
-module.exports = mongoose.model('category', category); 
+module.exports = mongoose.model('category', category);

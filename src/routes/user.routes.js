@@ -1,12 +1,12 @@
-'use strict'
+'use strict';
 
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const config = require("../config/config.json");
+const config = require('../config/config.json');
 
 const { jwtMiddleware: {
     verifyToken
-} } = require("../helpers")
+} } = require('../helpers');
 
 const { userController: {
     userAuthenticate,
@@ -15,23 +15,22 @@ const { userController: {
     changePassword_V2,
     userRegister,
     userRegister_V2
-} } = require("../controllers")
+} } = require('../controllers');
 
 module.exports = app => {
 
-    router.post('/authenticate', userAuthenticate)
+    router.post('/authenticate', userAuthenticate);
 
-    router.post('/register', userRegister)
+    router.post('/register', userRegister);
 
-    router.post('/register_v2', userRegister_V2)
+    router.post('/register_v2', userRegister_V2);
 
-    router.post('/password_v2', changePassword_V2)
+    router.post('/password_v2', changePassword_V2);
 
-    router.get('/user/:id', verifyToken, getProfile)
+    router.get('/user/:id', verifyToken, getProfile);
 
-    router.put('/password', changePassword)
+    router.put('/password', changePassword);
 
-    app.use(config.api_v1 + "/users", router)
+    app.use(config.api_v1 + '/users', router);
 
-}
-
+};

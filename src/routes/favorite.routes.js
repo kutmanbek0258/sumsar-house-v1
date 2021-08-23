@@ -1,26 +1,26 @@
-'use strict'
-const express = require("express");
+'use strict';
+const express = require('express');
 const router = express.Router();
-const config = require("../config/config.json");
+const config = require('../config/config.json');
 
 const { jwtMiddleware: {
     verifyToken
-} } = require("../helpers")
+} } = require('../helpers');
 
 const { favoriteController: {
     addFavorite,
     getFavorites,
     clearFavorite
-} } = require("../controllers")
+} } = require('../controllers');
 
 module.exports = app => {
 
-    router.post('/add/:id', verifyToken, addFavorite)
+    router.post('/add/:id', verifyToken, addFavorite);
 
-    router.post('/list/:id', verifyToken, getFavorites)
+    router.post('/list/:id', verifyToken, getFavorites);
 
-    router.post('/clear/:id', verifyToken, clearFavorite)
+    router.post('/clear/:id', verifyToken, clearFavorite);
 
-    app.use(config.api_v1 + "/favorite", router)
+    app.use(config.api_v1 + '/favorite', router);
 
-}
+};

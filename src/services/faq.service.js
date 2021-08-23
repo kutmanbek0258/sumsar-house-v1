@@ -15,23 +15,23 @@ exports.addFAQ = async function(title, content, contacts, link, callback, error)
 
     await newFAQ.save()
 
-        .then(() => callback({status: 200, message: title}))
+        .then(() => callback({ status: 200, message: title }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.getFAQ = async function(callback, error){
     await faq.findOne()
 
-        .then(faq => callback({ status: 200, faq: faq}))
+        .then(faq => callback({ status: 200, faq: faq }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.removeFAQ = async function(id, callback, error){
     faq.deleteOne({ _id: id })
 
-        .then(() => callback({ status: 200,  message: 'Success deleted !' }))
+        .then(() => callback({ status: 200, message: 'Success deleted !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};

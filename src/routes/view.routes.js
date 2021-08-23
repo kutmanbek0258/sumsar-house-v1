@@ -1,6 +1,6 @@
-const express = require("express")
-const router = express.Router()
-const config = require("../config/config.json")
+const express = require('express');
+const router = express.Router();
+const config = require('../config/config.json');
 
 module.exports = app => {
 
@@ -10,6 +10,6 @@ module.exports = app => {
         res.render('privacy');
     });
 
-    app.use(config.api_v1, router)
+    app.use(config.api_v1, router);
 
-}
+};

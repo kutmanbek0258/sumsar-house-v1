@@ -1,26 +1,26 @@
-'use strict'
-const express = require("express");
+'use strict';
+const express = require('express');
 const router = express.Router();
-const config = require("../config/config.json");
+const config = require('../config/config.json');
 
 const { jwtMiddleware: {
     verifyToken
-} } = require("../helpers")
+} } = require('../helpers');
 
 const { bannerController: {
     addBanner,
     removeBanner,
     getBanners
-} } = require("../controllers")
+} } = require('../controllers');
 
 module.exports = app => {
 
-    router.post('/add/:id', verifyToken, addBanner)
+    router.post('/add/:id', verifyToken, addBanner);
 
-    router.post('/remove/:id', verifyToken, removeBanner)
+    router.post('/remove/:id', verifyToken, removeBanner);
 
-    router.post('/list/:id', verifyToken, getBanners)
+    router.post('/list/:id', verifyToken, getBanners);
 
-    app.use(config.api_v1 + "/banner", router)
+    app.use(config.api_v1 + '/banner', router);
 
-}
+};

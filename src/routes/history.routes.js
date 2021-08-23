@@ -1,18 +1,18 @@
-'use strict'
-const express = require("express");
+'use strict';
+const express = require('express');
 const router = express.Router();
-const config = require("../config/config.json");
+const config = require('../config/config.json');
 
 const { jwtMiddleware: {
     verifyToken
-} } = require("../helpers")
+} } = require('../helpers');
 
 const { historyController: {
     addHistory,
     historyClear,
     historyList,
     historyRemove
-}} = require("../controllers")
+} } = require('../controllers');
 
 module.exports = app => {
 
@@ -24,6 +24,6 @@ module.exports = app => {
 
     router.post('/remove/:id', verifyToken, historyRemove);
 
-    app.use(config.api_v1 + "/history", router)
+    app.use(config.api_v1 + '/history', router);
 
-}
+};

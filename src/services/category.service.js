@@ -15,21 +15,21 @@ exports.addCategory = async function(name, description, callback, error){
 
         .then(() => callback({ status: 200, message: 'Added to categories' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.getCategories = async function(callback, error){
     await category.find()
 
-        .then(categories => callback({ status: 200, categories: categories}))
+        .then(categories => callback({ status: 200, categories: categories }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.removeCategory = async function(_id, callback, error){
     await category.deleteOne({ _id: _id })
 
-        .then(() => callback({ status: 200,  message: 'Success deleted !' }))
+        .then(() => callback({ status: 200, message: 'Success deleted !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};

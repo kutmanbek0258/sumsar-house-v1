@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const history = require('../models/history');
 const config = require('../config/config.json');
@@ -16,39 +16,39 @@ exports.addHistory = async function(user, house, callback, error){
 
         .then(() => callback({ status: 200, message: 'Added to hostory' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }));
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.clearHistory = async function(user, callback, error){
     await history.deleteMany({ user: user })
 
-        .then(() => callback({ status: 200,  message: 'Success cleared !' }))
+        .then(() => callback({ status: 200, message: 'Success cleared !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.clearHistoryHouse = async function(house, callback, error){
     await history.deleteMany({ house: house })
 
-        .then(() => callback({ status: 200,  message: 'Success cleared !' }))
+        .then(() => callback({ status: 200, message: 'Success cleared !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.isHistory = async function(user, house, callback, error){
-    await history.find({user: user, house: house})
+    await history.find({ user: user, house: house })
 
         .then(history => {
             if(history.length>0){
-                callback({status: 200, history: true})
+                callback({ status: 200, history: true });
             }else{
-                callback({status: 200, history: false})
+                callback({ status: 200, history: false });
             }
-            callback({status: 200})
+            callback({ status: 200 });
         })
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.getHistories = async function(user, callback, error){
     await history.find({ user: user })
@@ -69,17 +69,17 @@ exports.getHistories = async function(user, callback, error){
 
         .limit(config.history_limit)
 
-        .sort({created_at: -1})
+        .sort({ created_at: -1 })
 
-        .then(histories => callback({ status: 200, histories: histories}))
+        .then(histories => callback({ status: 200, histories: histories }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
 
 exports.removeHistory = async function(user, house, callback, error){
     await history.deleteOne({ user: user, house: house })
 
-        .then(history => callback({ status: 200,  message: 'Success deleted !' }))
+        .then(() => callback({ status: 200, message: 'Success deleted !' }))
 
-        .catch(err => error({ status: 500, message: 'Internal Server Error !' }))
-}
+        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+};
