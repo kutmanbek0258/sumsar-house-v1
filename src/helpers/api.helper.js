@@ -1,7 +1,7 @@
 const config = require('./../config/config.json');
 
-exports.createPayload = (ErrorCode, data = null) => {
-    const payloadObject = config.responses[ErrorCode];
+exports.createPayload = (statusCode, data = null) => {
+    const payloadObject = config.responses[statusCode];
 
     return {
         error: payloadObject.error,
@@ -11,8 +11,8 @@ exports.createPayload = (ErrorCode, data = null) => {
     };
 };
 
-exports.createStatus = (ErrorCode) => {
-    const payloadObject = config.responses[ErrorCode];
+exports.createStatus = (statusCode) => {
+    const payloadObject = config.responses[statusCode];
 
     return payloadObject.status;
 };

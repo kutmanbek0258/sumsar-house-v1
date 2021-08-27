@@ -6,7 +6,7 @@ const fs = require('fs');
  * @param fileName
  */
 exports.saveBase64Image = function (base64Data, fileName){
-    fs.writeFile(fileName, base64Data, 'base64', (err) =>{
+    return fs.writeFile(fileName, base64Data, 'base64', (err) =>{
         return !err;
     });
 };
@@ -16,7 +16,7 @@ exports.saveBase64Image = function (base64Data, fileName){
  * @param fileName
  */
 exports.deleteFile = function (fileName){
-    fs.unlink(fileName,(err) => {
+    return fs.unlink(fileName,(err) => {
         return !err;
     });
 };

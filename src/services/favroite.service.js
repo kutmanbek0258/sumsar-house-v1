@@ -7,11 +7,9 @@ const config = require('../config/config.json');
  *
  * @param user
  * @param house
- * @param callback
- * @param error
- * @returns {Promise<void>}
+ * @returns {Promise<*>}
  */
-exports.addFavorite = async function(user, house, callback, error){
+exports.addFavorite = async function(user, house){
     const newFavorite = new favorite({
 
         user: user,
@@ -20,75 +18,45 @@ exports.addFavorite = async function(user, house, callback, error){
 
     });
 
-    await newFavorite.save()
-
-        .then(() => callback({ status: 200, message: 'Added to favorites' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+    return await newFavorite.save();
 };
 
 /**
  *
  * @param user
- * @param callback
- * @param error
- * @returns {Promise<void>}
+ * @returns {Promise<*>}
  */
-exports.clearFavorite = async function(user, callback, error){
-    await favorite.deleteMany({ user: user })
-
-        .then(() => callback({ status: 200, message: 'Success deleted !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+exports.clearFavorite = async function(user){
+    return await favorite.deleteMany({ user: user });
 };
 
 /**
  *
  * @param house
- * @param callback
- * @param error
  * @returns {Promise<void>}
  */
-exports.clearFavoriteHouse = async function(house, callback, error){
-    favorite.deleteMany({ house: house })
-
-        .then(() => callback({ status: 200, message: 'Success deleted !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+exports.clearFavoriteHouse = async function(house){
+    return await favorite.deleteMany({ house: house });
 };
 
 /**
  *
  * @param user
  * @param house
- * @param callback
- * @param error
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>}
  */
-exports.isFavorite = async function(user, house, callback, error){
-    await favorite.find({ user: user, house: house })
-
-        .then(favorite => {
-            if(favorite.length>0){
-                callback({ status: 200, favorite: true });
-            }else{
-                callback({ status: 200, favorite: false });
-            }
-            callback({ status: 200 });
-        })
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+exports.isFavorite = async function(user, house){
+    const favorite = await favorite.find({ user: user, house: house });
+    return favorite.length > 0;
 };
 
 /**
  *
  * @param user
- * @param callback
- * @param error
  * @returns {Promise<void>}
  */
-exports.getFavorites = async function(user, callback, error){
-    await favorite.find({ user: user })
+exports.getFavorites = async function(user){
+    return await favorite.find({ user: user })
 
         .populate('user')
 
@@ -106,25 +74,15 @@ exports.getFavorites = async function(user, callback, error){
 
         .limit(config.favorite_limit)
 
-        .sort({ created_at: -1 })
-
-        .then(favorites => callback({ status: 200, favorites: favorites }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        .sort({ created_at: -1 });
 };
 
 /**
  *
  * @param user
  * @param house
- * @param callback
- * @param error
  * @returns {Promise<void>}
  */
-exports.removeFavorite = async function(user, house, callback, error){
-    await favorite.deleteOne({ user: user, house: house })
-
-        .then(() => callback({ status: 200, message: 'Success deleted !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+exports.removeFavorite = async function(user, house){
+    return await favorite.deleteOne({ user: user, house: house });
 };
