@@ -16,14 +16,16 @@ mongoose.connect('mongodb://localhost:27017/u_rent', {
     useMongoClient: true
 });
 
-/*mongoose.connect('mongodb://127.0.0.1:27017/u_rent', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    "auth": { "authSource": "admin" },
-    "user": "admin",
-    "pass": "myadminpassword"
-});*/
+// try{
+//     mongoose.connect('mongodb://127.0.0.1:27017/u_rent', {
+//         useMongoClient: true,
+//         'auth': { 'authSource': 'admin' },
+//         'user': 'admin',
+//         'pass': 'password'
+//     });
+// }catch (error){
+//     console.log(error);
+// }
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 

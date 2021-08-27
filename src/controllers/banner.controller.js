@@ -12,11 +12,14 @@ exports.addBanner = async function (req, res) {
 
     const { description, link, location } = req.body;
 
-    await addBanner(description, link, location, result => {
-        res.status(result.status).json({ message: result.message });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try {
+        await addBanner(description, link, location);
+    }catch (error){
+        res.status(500).json({ error: true, message: 'Server Error' });
+        return;
+    }
+
+    res.status(200).json({ error: false, message: 'Created Success' });
 
 };
 
@@ -26,20 +29,28 @@ exports.getBanners = async function (req, res) {
     const limit = config.banner_limit;
     const radius = config.banner_radius;
 
-    await getBanners(limit, location, radius, result => {
-        res.status(result.status).json({ banners: result.banners });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    let banners = null;
+
+    try{
+        banners = await getBanners(limit, location, radius);
+    }catch (error){
+        res.status(500).json({ error: true, message: 'Server Error' });
+        return;
+    }
+
+    res.status(200).json({ banners: banners });
 
 };
 
 exports.removeBanner = async function (req, res) {
     const { _id } = req.body;
 
-    await removeBanner(_id, result => {
-        res.status(result.status).json({ message: 'removed success' });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        await removeBanner(_id);
+    }catch (error){
+        res.status(500).json({ error: true, message: 'Server error' });
+        return;
+    }
+
+    res.status(200).json({ error: false, message: 'Deleted success' });
 };

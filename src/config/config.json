@@ -12,17 +12,68 @@
    "api_v1": "/api/v1",
    "log_level": "dev",
    "log_mode": "console",
-   "messages": {
+   "responses": {
+      "e_server_error": {
+         "status": 500,
+         "error": true,
+         "code": "e_server_error",
+         "message": {
+            "en": "Internal server error",
+            "ru": "Внутренняя ошибка сервера"
+         }
+      },
+      "e_invalid_request": {
+         "status": 400,
+         "error": true,
+         "code": "e_invalid_request",
+         "message": {
+            "en": "Invalid request",
+            "ru": "Ошибка запроса"
+         }
+      },
       "e_invalid_pass": {
-         "en": {
-            "status": 400,
-            "code": "e_invalid_pass",
-            "message": "Invalid password"
-         },
-         "ru": {
-            "status": 400,
-            "code": "e_invalid_pass",
-            "message": "Недопустимый пароль"
+         "status": 400,
+         "error": true,
+         "code": "e_invalid_pass",
+         "message": {
+            "en": "Invalid password",
+            "ru": "Недопустимый пароль"
+         }
+      },
+      "e_invalid_token": {
+         "status": 403,
+         "error": true,
+         "code": "e_invalid_token",
+         "message": {
+            "en": "Invalid token",
+            "ru": "Недействительный токен"
+         }
+      },
+      "e_user_existed": {
+         "status": 409,
+         "error": true,
+         "code": "e_user_existed",
+         "message": {
+            "en": "User already registered by this email",
+            "ru": "Пользователь уже зарегистрирован с этим email"
+         }
+      },
+      "e_user_not_exist": {
+         "status": 409,
+         "error": true,
+         "code": "e_user_not_exist",
+         "message": {
+            "en": "User not exist",
+            "ru": "Пользователь отсутсвует"
+         }
+      },
+      "success": {
+         "status": 200,
+         "error": false,
+         "code": "success",
+         "message": {
+            "en": "Success",
+            "ru": "Упешно выполнено"
          }
       }
    }

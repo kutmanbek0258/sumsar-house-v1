@@ -17,4 +17,4 @@ COPY . /usr/src/app
 EXPOSE 8088
 
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]
