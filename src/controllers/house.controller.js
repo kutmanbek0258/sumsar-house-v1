@@ -15,11 +15,11 @@ const { houseService: {
     getHousesUser
 }, favoriteService: {
     isFavorite,
-    clearFavorite
+    clearFavoriteHouse
 }, historyService: {
     isHistory,
     addHistory,
-    clearHistory
+    clearHistoryHouse
 } } = require('../services');
 
 const { files: {
@@ -190,22 +190,24 @@ exports.getHouses = async function (req, res) {
 exports.getHousesUser = async function (req, res) {
 
     const {
-        user
+        user: { _id: userId }
     } = req.body;
+    let houses = null;
 
-    if(!user){
+    if(!userId){
 
-        res.status(400).json({ message: 'Invalid request !' });
-
-    } else{
-
-        await getHousesUser(user._id, result => {
-            res.status(result.status).json({ houses: result.houses });
-        }, err => {
-            res.status(err.status).json({ message: err.message });
-        });
-
+        res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
+        return;
     }
+
+    try{
+        houses = await getHousesUser(userId);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { house: houses[0] }));
 
 };
 
@@ -216,19 +218,22 @@ exports.getHousesRadius = async function (req, res) {
         radius
     } = req.body;
 
+    let houses = null;
+
     if(!location || !radius){
 
-        res.status(400).json({ message: 'Invalid request !' });
-
-    } else{
-
-        await getHousesRadius(location, radius, result => {
-            res.status(result.status).json({ houses: result.houses });
-        }, err => {
-            res.status(err.status).json({ message: err.message });
-        });
-
+        res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
+        return;
     }
+
+    try{
+        houses = await getHousesRadius(location, radius);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { houses: houses }));
 
 };
 
@@ -243,27 +248,29 @@ exports.getHousesSearch = async function (req, res) {
         sort_date
     } = req.body;
 
+    let houses = null;
+    let sort;
+
+    if(sort_date){
+        sort = { created_at: -1 };
+    }else{
+        sort = null;
+    }
+
     if(!location){
 
-        res.status(400).json({ message: 'Invalid request !' });
-
-    } else{
-
-        let sort;
-
-        if(sort_date){
-            sort = { created_at: -1 };
-        }else{
-            sort = null;
-        }
-
-        await getHousesKeyword(sort, keyword, count, limit, location, radius, result => {
-            res.status(result.status).json({ houses: result.houses });
-        }, err => {
-            res.status(err.status).json({ message: err.message });
-        });
-
+        res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
+        return;
     }
+
+    try{
+        houses = await getHousesKeyword(sort, keyword, count, limit, location, radius);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { houses: houses }));
 
 };
 
@@ -278,25 +285,30 @@ exports.getHousesCategory = async function (req, res) {
         sort_date
     } = req.body;
 
+    let houses;
+    let sort;
+
+    if(sort_date){
+        sort = { created_at: -1 };
+    }else{
+        sort = null;
+    }
+
     if(!location){
 
-        res.status(400).json({ message: 'Invalid request !' });
-
-    } else{
-
-        let sort;
-
-        if(sort_date){
-            sort = { created_at: -1 };
-        }else{
-            sort = null;
-        }
-
-        await getHousesCategory(sort, category, count, limit, location, radius, result => {
-            res.status(result.status).json({ houses: result.houses });
-        }, err => res.status(err.status).json({ message: err.message }));
-
+        res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
+        return;
     }
+
+
+    try{
+        houses = await getHousesCategory(sort, category, count, limit, location, radius);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { houses: houses }));
 
 };
 
@@ -304,28 +316,63 @@ exports.removeHouse = async function (req, res) {
 
     const {
         _id,
-        user
+        user: { _id: userId }
     } = req.body;
 
-    await isHouseUser(_id, user._id, result => {
-        if(result.house === true){
+    if(!await isHouseUser(_id, userId)){
+        res.status(createStatus('e_access_denied')).json(createPayload('e_access_denied'));
+        return;
+    }
 
-            removeHouse(_id, result => {
-                deleteFile(config.img_houses + _id + '_1.png');
-                res.status(result.status).json({ message: result.message });
+    try{
+        await removeHouse(_id);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
-                clearHistory(_id);
+    try{
+        await clearHistoryHouse(_id);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
-                clearFavorite(_id);
-            }, () => {
-                res.status(result.status).json({ message: result.message });
-            });
+    try{
+        await clearFavoriteHouse(_id);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
-        }else{
+    try{
+        deleteFile(config.img_houses + _id + '_1.png');
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
-            res.status(400).json({ message: 'Invalid request !' });
+    res.status(createStatus('success')).json(createPayload('success'));
 
-        }
-    }, () => res.status(400).json({ message: 'Internal error !' }));
+    // await isHouseUser(_id, user._id, result => {
+    //     if(result.house === true){
+    //
+    //         removeHouse(_id, result => {
+    //             deleteFile(config.img_houses + _id + '_1.png');
+    //             res.status(result.status).json({ message: result.message });
+    //
+    //             clearHistory(_id);
+    //
+    //             clearFavorite(_id);
+    //         }, () => {
+    //             res.status(result.status).json({ message: result.message });
+    //         });
+    //
+    //     }else{
+    //
+    //         res.status(400).json({ message: 'Invalid request !' });
+    //
+    //     }
+    // }, () => res.status(400).json({ message: 'Internal error !' }));
 
 };

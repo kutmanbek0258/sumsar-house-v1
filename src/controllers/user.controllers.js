@@ -22,6 +22,7 @@ exports.userAuthenticate = async function(req, res){
 
     const credentials = auth(req);
     let user = null;
+    let token = null;
 
     if (!credentials) {
         res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
@@ -36,16 +37,25 @@ exports.userAuthenticate = async function(req, res){
         }
         user = userData[0];
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
 
-    if(bcrypt.compareSync(credentials.pass, user.hashed_password)){
-        const token = jwt.sign(user, config.secret, { expiresIn: '365d' });
-        res.status(createStatus('success')).json(createPayload('success', { token: token }));
-    }else {
+    if(!bcrypt.compareSync(credentials.pass, user.hashed_password)){
         res.status(createStatus('e_invalid_pass')).json(createPayload('e_invalid_pass'));
+        return;
     }
+
+    try{
+        token = jwt.sign({ phone: credentials.name }, config.tokenSecret, { expiresIn: config.tokenExpire });
+    }catch (error){
+        console.log(error);
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { token: token }));
 };
 
 exports.userRegister = async function(req, res){
@@ -59,6 +69,8 @@ exports.userRegister = async function(req, res){
     let {
         email
     } = req.body;
+
+    let token = null;
 
     console.log(req.body);
 
@@ -83,12 +95,19 @@ exports.userRegister = async function(req, res){
             res.status(createStatus('e_user_existed')).json(createPayload('e_user_existed'));
             return;
         }else {
+            console.log(error);
             res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
             return;
         }
     }
 
-    const token = jwt.sign(phone, config.secret, { expiresIn: '365d' });
+    try{
+        token = jwt.sign({ phone:phone }, config.tokenSecret, { expiresIn: config.tokenExpire });
+    }catch (error){
+        console.log(error);
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
     res.status(createStatus('success')).json(createPayload('success', { token: token }));
 };
@@ -98,6 +117,7 @@ exports.userRegister_V2 = async function(req, res){
     const {
         name
     } = req.body;
+    let token = null;
 
     if (!name || !name.trim()) {
         res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
@@ -116,11 +136,18 @@ exports.userRegister_V2 = async function(req, res){
     try{
         await registerUser(name, email, phone, password);
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
 
-    const token = jwt.sign(phone, config.secret, { expiresIn: '365d' });
+    try{
+        token = jwt.sign({ phone:phone }, config.tokenSecret, { expiresIn: config.tokenExpire });
+    }catch (error){
+        console.log(error);
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
     res.status(createStatus('success')).json(createPayload('success', { token: token }));
 };
@@ -133,6 +160,7 @@ exports.changePassword = async function (req, res){
     } = req.body;
 
     let user = null;
+    let token = null;
     const oldPassword = config.default_pass;
 
     if (!phone || !newPassword || !phone.trim() || !newPassword.trim()) {
@@ -153,6 +181,7 @@ exports.changePassword = async function (req, res){
         }
         user = userData[0];
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
@@ -165,11 +194,19 @@ exports.changePassword = async function (req, res){
     try{
         await changePassword(user._id, newPassword);
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
 
-    const token = jwt.sign(phone, config.secret, { expiresIn: '365d' });
+    try{
+        token = jwt.sign({ phone:phone }, config.tokenSecret, { expiresIn: config.tokenExpire });
+    }catch (error){
+        console.log(error);
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
     res.status(createStatus('success')).json(createPayload('success', { token: token }));
 };
 
@@ -186,6 +223,7 @@ exports.getProfile = async function (req, res){
         }
         user = userData[0];
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
@@ -202,6 +240,7 @@ exports.changePassword_V2 = async function (req, res){
     } = req.body;
 
     let user = null;
+    let token = null;
 
     if (!phone || oldPassword || !newPassword || !phone.trim() || oldPassword.trim() || !newPassword.trim()) {
         res.status(createStatus('e_invalid_request')).json(createPayload('e_invalid_request'));
@@ -221,6 +260,7 @@ exports.changePassword_V2 = async function (req, res){
         }
         user = userData[0];
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
@@ -233,10 +273,18 @@ exports.changePassword_V2 = async function (req, res){
     try{
         await changePassword(user._id, newPassword);
     }catch (error){
+        console.log(error);
         res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
         return;
     }
 
-    const token = jwt.sign(phone, config.secret, { expiresIn: '365d' });
+    try{
+        token = jwt.sign({ phone:phone }, config.tokenSecret, { expiresIn: config.tokenExpire });
+    }catch (error){
+        console.log(error);
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
     res.status(createStatus('success')).json(createPayload('success', { token: token }));
 };

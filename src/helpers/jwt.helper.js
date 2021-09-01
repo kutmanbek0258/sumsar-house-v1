@@ -19,7 +19,7 @@ exports.verifyToken = async function (req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, config.secret);
+        const decoded = jwt.verify(token, config.tokenSecret);
         if(id === decoded.phone){
             next();
         }else {
@@ -39,7 +39,7 @@ exports.decodeToken = async function(req) {
     const token = req.headers['x-access-token'];
     if (token) {
         try {
-            return jwt.verify(token, config.secret);
+            return jwt.verify(token, config.tokenSecret);
         } catch(err) {
             return false;
         }
