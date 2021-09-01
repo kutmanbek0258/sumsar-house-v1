@@ -1,8 +1,13 @@
 const passwordValidator = require('password-validator');
 
+/**
+ *
+ * @param password
+ * @returns {Promise<boolean|string[]>}
+ */
 exports.isPasswordValid = async function (password) {
 
-    var schema = new passwordValidator();
+    let schema = new passwordValidator();
 
     schema
         .is().min(8) // Minimum length 8

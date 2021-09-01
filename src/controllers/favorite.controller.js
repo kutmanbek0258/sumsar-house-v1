@@ -8,59 +8,58 @@ const { favoriteService: {
     getFavorites
 } } = require('../services');
 
+const { apiHelper: { createStatus, createPayload } } = require('../helpers');
+
 
 exports.addFavorite = async function (req, res){
 
     const {
-        user,
-        house
+        user: { _id: userId },
+        house: { _id: houseId }
     } = req.body;
 
-    await isFavorite(user._id, house._id, result => {
-        if(result.favorite === false){
-
-            addFavorite(user, house, result => {
-                res.status(result.status).json({ message: result.message });
-            }, err => {
-                res.status(err.status).json({ message: err.message });
-            });
-
-        }else{
-
-            removeFavorite(user, house, result => {
-                res.status(result.status).json({ message: result.message });
-            }, err => {
-                res.status(err.status).json({ message: err.message });
-            });
-
+    try{
+        if(await isFavorite(userId, houseId)){
+            await addFavorite(userId, houseId);
+        }else {
+            await removeFavorite(userId, houseId);
         }
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success'));
 
 };
 
 exports.getFavorites = async function (req, res) {
 
-    const { user } = req.body;
+    const { user: { _id: userId } } = req.body;
+    let favorites = null;
 
-    await getFavorites(user._id, result => {
-        res.status(result.status).json({ favorites: result.favorites });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        favorites = await getFavorites(userId);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { favorites: favorites }));
 
 };
 
 exports.clearFavorite = async function (req, res) {
 
-    const { user } = req.body;
+    const { user: { _id: userId } } = req.body;
 
-    await clearFavorite(user._id, result => {
-        res.status(result.status).json({ message: result.message });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        await clearFavorite(userId);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
 
+    res.status(createStatus('success')).json(createPayload('success'));
 
 };

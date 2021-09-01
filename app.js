@@ -12,18 +12,20 @@ const fs = require('fs');
 const path = require('path');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/u_rent', {
+mongoose.connect(config.mongodb_host + config.mongodb_database, {
     useMongoClient: true
 });
 
-/*mongoose.connect('mongodb://127.0.0.1:27017/u_rent', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    "auth": { "authSource": "admin" },
-    "user": "admin",
-    "pass": "myadminpassword"
-});*/
+// try{
+//     mongoose.connect('mongodb://127.0.0.1:27017/u_rent', {
+//         useMongoClient: true,
+//         'auth': { 'authSource': 'admin' },
+//         'user': 'admin',
+//         'pass': 'password'
+//     });
+// }catch (error){
+//     console.log(error);
+// }
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
@@ -34,6 +36,9 @@ if(config.log_mode === 'file'){
     app.use(logger(config.log_level, { stream: accessLogStream }));
 }else if(config.log_mode === 'console'){
     app.use(logger(config.log_level));
+}else if(config.log_mode === 'combined'){
+    app.use(logger(config.log_level));
+    app.use(logger(config.log_level, { stream: accessLogStream }));
 }
 
 routes(app);

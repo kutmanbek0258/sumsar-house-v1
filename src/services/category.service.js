@@ -2,7 +2,13 @@
 
 const category = require('../models/category');
 
-exports.addCategory = async function(name, description, callback, error){
+/**
+ *
+ * @param name
+ * @param description
+ * @returns {Promise<void>}
+ */
+exports.addCategory = async function(name, description){
     const newCategory = new category({
 
         name: name,
@@ -11,25 +17,22 @@ exports.addCategory = async function(name, description, callback, error){
 
     });
 
-    await newCategory.save()
-
-        .then(() => callback({ status: 200, message: 'Added to categories' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+    return await newCategory.save();
 };
 
-exports.getCategories = async function(callback, error){
-    await category.find()
-
-        .then(categories => callback({ status: 200, categories: categories }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+/**
+ *
+ * @returns {Promise<void>}
+ */
+exports.getCategories = async () => {
+    return await category.find();
 };
 
-exports.removeCategory = async function(_id, callback, error){
-    await category.deleteOne({ _id: _id })
-
-        .then(() => callback({ status: 200, message: 'Success deleted !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+/**
+ *
+ * @param _id
+ * @returns {Promise<void>}
+ */
+exports.removeCategory = async function(_id){
+    return await category.deleteOne({ _id: _id });
 };

@@ -8,6 +8,8 @@ const { historyService: {
     removeHistory
 } } = require('../services');
 
+const { apiHelper: { createPayload, createStatus } } = require('../helpers');
+
 exports.addHistory = async function (req, res) {
 
     const {
@@ -15,61 +17,73 @@ exports.addHistory = async function (req, res) {
         house
     } = req.body;
 
-    await isHistory(user._id, house._id, result => {
-        if(result.history === false){
-
-            addHistory(user, house, result => {
-                res.status(result.status).json({ message: result.message });
-            }, err => {
-                res.status(err.status).json({ message: err.message });
-            });
-
-        } else {
-
-            res.status(result.status).json({ message: 'Already in history' });
-
+    try{
+        const history = await isHistory(user._id, house._id);
+        if(history.length > 0){
+            res.status(createStatus('e_history_exist')).json(createPayload('e_history_exist'));
+            return;
         }
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    }catch (error){
+        res.status(createStatus('e_server_error')).json('e_server_error');
+        return;
+    }
+
+    try{
+        await addHistory(user, house);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success'));
 
 };
 
 exports.historyList = async function (req, res) {
 
-    const { user } = req.body;
+    const { user: { _id } } = req.body;
+    let histories = null;
 
-    await getHistories(user._id, result => {
-        res.status(result.status).json({ histories: result.histories });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        histories = await getHistories(_id);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success', { histories: histories }));
 
 };
 
 exports.historyClear = async function (req, res) {
 
-    const { user } = req.body;
+    const { user: { _id } } = req.body;
 
-    await clearHistory(user._id, result => {
-        res.status(result.status).json({ message: result.message });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        await clearHistory(_id);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server-error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success'));
 
 };
 
 exports.historyRemove = async function (req, res) {
 
     const {
-        user,
-        house
+        user: { _id: userId },
+        house: { _id: houseId }
     } = req.body;
 
-    await removeHistory(user._id, house._id, result => {
-        res.status(result.status).json({ message: result.message });
-    }, err => {
-        res.status(err.status).json({ message: err.message });
-    });
+    try{
+        await removeHistory(userId, houseId);
+    }catch (error){
+        res.status(createStatus('e_server_error')).json(createPayload('e_server_error'));
+        return;
+    }
+
+    res.status(createStatus('success')).json(createPayload('success'));
 
 };

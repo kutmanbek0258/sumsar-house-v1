@@ -1,13 +1,22 @@
 const fs = require('fs');
 
-exports.saveBase64Image = async function (base64Data, fileName){
-    fs.writeFile(fileName, base64Data, 'base64', function(err) {
+/**
+ *
+ * @param base64Data
+ * @param fileName
+ */
+exports.saveBase64Image = function (base64Data, fileName){
+    return fs.writeFile(fileName, base64Data, 'base64', (err) =>{
         return !err;
     });
 };
 
-exports.deleteFile = async function (fileName){
-    fs.unlink(fileName,function(err) {
+/**
+ *
+ * @param fileName
+ */
+exports.deleteFile = function (fileName){
+    return fs.unlink(fileName,(err) => {
         return !err;
     });
 };

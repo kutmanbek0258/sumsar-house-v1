@@ -3,7 +3,18 @@
 const house = require('../models/house');
 const mongoose = require('mongoose');
 
-exports.addHouse = async function(address, description, location, phone, price, user, category, callback, error){
+/**
+ *
+ * @param address
+ * @param description
+ * @param location
+ * @param phone
+ * @param price
+ * @param user
+ * @param category
+ * @returns {Promise<*>}
+ */
+exports.addHouse = async function(address, description, location, phone, price, user, category){
     const newHouse = new house({
 
         _id: new mongoose.Types.ObjectId(),
@@ -18,49 +29,59 @@ exports.addHouse = async function(address, description, location, phone, price, 
 
     });
 
-    await newHouse.save()
-
-        .then(() => callback({ status: 200, message: address , id: newHouse._id }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+    return await newHouse.save();
 };
 
-exports.editHouse = async function(_id, address, description, phone, price, location, category, callback, error){
-    await house.findOneAndUpdate({ _id: _id }, { address: address, description: description, phone: phone, price: price, location: location, category: category })
-
-        .then(callback({ status: 200, message: 'House Updated Sucessfully !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+/**
+ *
+ * @param _id
+ * @param address
+ * @param description
+ * @param phone
+ * @param price
+ * @param location
+ * @param category
+ * @returns {Promise<void>}
+ */
+exports.editHouse = async function(_id, address, description, phone, price, location, category){
+    return await house.findOneAndUpdate({ _id: _id }, { address: address, description: description, phone: phone, price: price, location: location, category: category });
 };
 
-exports.getHouse = async function(_id, callback, error){
-    await house.find({ _id: _id })
+/**
+ *
+ * @param _id
+ * @returns {Promise<void>}
+ */
+exports.getHouse = async function(_id){
+    return await house.find({ _id: _id })
 
         .populate('user')
 
-        .populate('category')
-
-        .then(houses => callback({ status: 200, house: houses[0] }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        .populate('category');
 };
 
-exports.isHouseUser = async function(_id, user, callback, error){
-    await house.find({ _id: _id, user: user })
-
-        .then(houses => {
-            if(houses.length>0){
-                callback({ status: 200, house: true });
-            }else{
-                callback({ status: 200, house: false });
-            }
-        })
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+/**
+ *
+ * @param _id
+ * @param user
+ * @returns {Promise<boolean>}
+ */
+exports.isHouseUser = async function(_id, user){
+    const houses = await house.find({ _id: _id, user: user });
+    return houses > 0;
 };
 
-exports.getHouses = async function(sort, count, limit, location, radius, callback, error){
-    await house.find({
+/**
+ *
+ * @param sort
+ * @param count
+ * @param limit
+ * @param location
+ * @param radius
+ * @returns {Promise<*>}
+ */
+exports.getHouses = async function(sort, count, limit, location, radius){
+    return await house.find({
         location: {
             $near :{
                 $maxDistance: radius,
@@ -82,15 +103,21 @@ exports.getHouses = async function(sort, count, limit, location, radius, callbac
 
         .limit( limit )
 
-        .sort( sort )
-
-        .then(houses => callback({ status: 200, houses: houses }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        .sort( sort );
 };
 
-exports.getHousesCategory = async function(sort, category, count, limit, location, radius, callback, error){
-    await house.find({
+/**
+ *
+ * @param sort
+ * @param category
+ * @param count
+ * @param limit
+ * @param location
+ * @param radius
+ * @returns {Promise<void>}
+ */
+exports.getHousesCategory = async function(sort, category, count, limit, location, radius){
+    return await house.find({
         location: {
             $near :{
                 $maxDistance: radius,
@@ -113,15 +140,17 @@ exports.getHousesCategory = async function(sort, category, count, limit, locatio
 
         .limit( limit )
 
-        .sort( sort )
-
-        .then(houses => callback({ status: 200, houses: houses }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        .sort( sort );
 };
 
-exports.getHousesRadius = async function(location, radius, callback, error){
-    house.find({
+/**
+ *
+ * @param location
+ * @param radius
+ * @returns {Promise<void>}
+ */
+exports.getHousesRadius = async function(location, radius){
+    return await house.find({
         location: {
             $near :{
                 $maxDistance: radius,
@@ -137,15 +166,21 @@ exports.getHousesRadius = async function(location, radius, callback, error){
             user: 0,
             category: 0,
             created_at: 0
-        })
-
-        .then(houses => callback({ status: 200, houses: houses }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        });
 };
 
-exports.getHousesKeyword = async function(sort, keyword, count, limit, location, radius, callback, error){
-    await house.find({
+/**
+ *
+ * @param sort
+ * @param keyword
+ * @param count
+ * @param limit
+ * @param location
+ * @param radius
+ * @returns {Promise<*>}
+ */
+exports.getHousesKeyword = async function(sort, keyword, count, limit, location, radius){
+    return await house.find({
 
         $text : {
             $search : keyword
@@ -175,18 +210,16 @@ exports.getHousesKeyword = async function(sort, keyword, count, limit, location,
 
         .limit( limit )
 
-        .sort( sort )
-
-        .then(houses => callback({ status: 200, houses: houses }))
-
-        .catch(err => {
-            console.log(err.message);
-            error({ status: 500, message: 'Internal Server Error !' });
-        });
+        .sort( sort );
 };
 
-exports.getHousesUser = async function(user, callback, error){
-    await house.find({ user: user })
+/**
+ *
+ * @param user
+ * @returns {Promise<*>}
+ */
+exports.getHousesUser = async function(user){
+    return await house.find({ user: user })
 
         .select({
             description: 0,
@@ -195,17 +228,14 @@ exports.getHousesUser = async function(user, callback, error){
             user: 0,
             category: 0,
             created_at: 0
-        })
-
-        .then(houses => callback({ status: 200, houses: houses }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+        });
 };
 
-exports.removeHouse = async function(id, callback, error){
-    await house.deleteOne({ _id: id })
-
-        .then(() => callback({ status: 200, message: 'Success deleted !' }))
-
-        .catch(() => error({ status: 500, message: 'Internal Server Error !' }));
+/**
+ *
+ * @param id
+ * @returns {Promise<void>}
+ */
+exports.removeHouse = async function(id){
+    return await house.deleteOne({ _id: id });
 };
