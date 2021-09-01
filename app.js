@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/u_rent', {
+mongoose.connect(config.mongodb_host + config.mongodb_database, {
     useMongoClient: true
 });
 
@@ -36,6 +36,9 @@ if(config.log_mode === 'file'){
     app.use(logger(config.log_level, { stream: accessLogStream }));
 }else if(config.log_mode === 'console'){
     app.use(logger(config.log_level));
+}else if(config.log_mode === 'combined'){
+    app.use(logger(config.log_level));
+    app.use(logger(config.log_level, { stream: accessLogStream }));
 }
 
 routes(app);

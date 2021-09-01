@@ -13,6 +13,8 @@
    "api_v1": "/api/v1",
    "log_level": "dev",
    "log_mode": "console",
+   "mongodb_host": "mongodb://localhost:27017",
+   "mongodb_database": "/u_rent",
    "responses": {
       "e_server_error": {
          "status": 500,
